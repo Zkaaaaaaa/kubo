@@ -11,6 +11,10 @@ class History extends Model
     use HasFactory;
 
     protected $table = 'histories';
-    protected $fillable = ['date','name','product','total'];
+    protected $fillable = ['date','name','product_id','note','total', 'status'];
 
+    public function product()
+    {
+        return $this->belongsTo(Product::class, 'product_id', 'id');
+    }
 }

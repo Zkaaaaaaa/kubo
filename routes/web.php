@@ -9,8 +9,11 @@ use App\Http\Controllers\Client\HomepageController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', [HomepageController::class, 'index'])->name('homepage.index');
-// 
+// CLIENT
+Route::get('/', [HomepageController::class, 'index'])->name('home');
+Route::get('/detail-product/{id}', [HomepageController::class, 'detailProduct'])->name('detail-product');
+Route::get('/cart', [HomepageController::class, 'cart'])->name('cart');
+Route::get('/category/{id}', [HomepageController::class, 'category'])->name('category');
 
 // CATEGORY
 Route::get('/admin/category', [AdminCategoryController::class, 'index'])->name('category.index');

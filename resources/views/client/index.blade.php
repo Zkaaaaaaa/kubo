@@ -103,10 +103,7 @@
                 </div>
                 <!-- /.card -->
             </div>
+            {{-- ./TAB KATEGORI --}}
         </div>
-        {{-- ./TAB KATEGORI --}}
-
-
-    </div>
     </div>
 @endsection

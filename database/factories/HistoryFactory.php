@@ -19,8 +19,10 @@ class HistoryFactory extends Factory
         return [
             'date' => fake()->date(),
             'name' => fake()->name(),
-            'product' => fake()->name(),
+            'product_id' => fake()->numberBetween(1, 100),
+            'note' => fake()->name(),
             'total' => fake()->randomFloat(2,10,1000),
+            'status' => fake()->randomElement(['cart', 'process', 'done']),
         ];
     }
 }

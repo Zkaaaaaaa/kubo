@@ -15,8 +15,10 @@ return new class extends Migration
             $table->id();
             $table->date('date');
             $table->string('name');
-            $table->string('product');
+            $table->foreignId('product_id');
+            $table->string('note');
             $table->integer('total');
+            $table->enum('status', ['cart', 'process', 'done']);
             $table->timestamps();
         });
     }

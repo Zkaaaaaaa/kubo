@@ -30,7 +30,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $history->date ?? '-' }}</td>
                                         <td>{{ $history->name ?? '-' }}</td>
-                                        <td>{{ $history->product ?? '-' }}</td>
+                                        <td>{{ $history->product->name ?? '-' }}</td>
                                         <td>{{ $history->total ?? '-' }}</td>
                                     </tr>
                                 @endforeach
