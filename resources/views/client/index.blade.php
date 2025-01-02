@@ -8,7 +8,7 @@
             {{-- SELAMAT DATANG --}}
             <div class="col-md-12 py-3">
                 <h2><b>Selamat Datang!</b></h2>
-                <h4><b>azka</b></h4>
+                <h4><b>{{ Auth::user()->name }}</b></h4>
             </div>
             {{-- ./SELAMAT DATANG --}}
 
@@ -90,8 +90,8 @@
                                                     <div class="card-body">
                                                         <h5 class="card-title">{{ $product->name }}</h5>
                                                         <p class="card-text">RP.{{ number_format($product->price) }}</p>
-                                                        <a href="#" class="btn btn-primary">Beli</a>
                                                     </div>
+                                                    <a href="{{ route('detail-product', $product->id) }}" class="btn btn-primary">Tambah</a>
                                                 </div>
                                             </div>
                                         @endforeach
