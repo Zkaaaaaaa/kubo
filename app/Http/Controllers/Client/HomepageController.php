@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\History;
+use Illuminate\Support\Facades\Auth;
 
 class HomepageController extends Controller
 {
@@ -37,7 +38,7 @@ class HomepageController extends Controller
 
     public function cart()
     {
-        $carts = History::where('status', 'cart')->get();
+        $carts = History::where('status', 'cart')->where('user_id', Auth::user()->id)->get();
         $categories = Category::all();
         return view('client.cart', compact('carts', 'categories'));
     }
@@ -48,7 +49,7 @@ class HomepageController extends Controller
         $note = $request->note;
         $quantity = $request->quantity;
         $history = History::create([
-            'user_id' => auth()->user()->id,
+            'user_id' => Auth::user()->id,
             'product_id' => $product->id,
             'note' => $note,
             'quantity' => $quantity,
@@ -62,7 +63,8 @@ class HomepageController extends Controller
     public function checkout(Request $request)
     {
         // Ambil keranjang pengguna saat ini
-        $userId = auth()->user()->id; // Pastikan pengguna login
+        $userId = Auth::user()->id; // Pastikan pengguna login
+        dd($userId);
         $carts = History::where('user_id', $userId)->get();
 
         // Periksa apakah keranjang kosong
