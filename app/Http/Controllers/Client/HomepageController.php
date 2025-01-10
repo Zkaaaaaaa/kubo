@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\Category;
 use App\Models\History;
 use Illuminate\Support\Facades\Auth;
+use Midtrans\Snap;
 
 class HomepageController extends Controller
 {
@@ -40,7 +41,29 @@ class HomepageController extends Controller
     {
         $carts = History::where('status', 'cart')->where('user_id', Auth::user()->id)->get();
         $categories = Category::all();
-        return view('client.cart', compact('carts', 'categories'));
+        // Set your Merchant Server Key
+        \Midtrans\Config::$serverKey = config('midtrans.server_key');
+        // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
+        \Midtrans\Config::$isProduction = config('midtrans.is_production');
+        // Set sanitization on (default)
+        \Midtrans\Config::$isSanitized = config('midtrans.is_sanitized');
+        // Set 3DS transaction for credit card to true
+        \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
+
+        $params = array(
+            'transaction_details' => array(
+                'order_id' => rand(),
+                'gross_amount' => 10000,
+            ),
+            'customer_details' => array(
+                'first_name' => Auth::user()->name,
+                'email' => Auth::user()->email,
+            ),
+        );
+
+        $snap_token = Snap::getSnapToken($params);
+
+        return view('client.cart', compact('carts', 'categories', 'snap_token'));
     }
 
     public function cartStore(Request $request, $id)
@@ -60,44 +83,8 @@ class HomepageController extends Controller
         return redirect()->route('cart');
     }
 
-    public function checkout(Request $request)
+    public function finish(Request $request)
     {
-        // Ambil keranjang pengguna saat ini
-        $userId = Auth::user()->id; // Pastikan pengguna login
-        dd($userId);
-        $carts = History::where('user_id', $userId)->get();
-
-        // Periksa apakah keranjang kosong
-        if ($carts->isEmpty()) {
-            return redirect()->back()->with('error', 'Keranjang Anda kosong!');
-        }
-
-        // Hitung total harga
-        $totalPrice = $carts->sum(function ($cart) {
-            return $cart->product->price * $cart->quantity;
-        });
-
-        // Buat pesanan baru
-        $order = History::create([
-            'user_id' => $userId,
-            'status' => 'process', // Status diubah menjadi "process"
-            'total_price' => $totalPrice,
-        ]);
-
-        // Pindahkan item dari keranjang ke pesanan
-        foreach ($carts as $cart) {
-            $order->orderItems()->create([
-                'product_id' => $cart->product_id,
-                'quantity' => $cart->quantity,
-                'note' => $cart->note,
-                'price' => $cart->product->price,
-            ]);
-
-            // Hapus item dari keranjang
-            $cart->delete();
-        }
-
-        // Redirect dengan pesan sukses
-        return redirect()->route('orders.index')->with('success', 'Pesanan Anda telah berhasil diproses!');
+        return $request->input('result_data');
     }
 }

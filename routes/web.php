@@ -29,11 +29,10 @@ Route::middleware(['auth', Employee::class])->name('employee.')->prefix('employe
 Route::middleware(['auth', Customer::class])->group(function () {
     Route::get('/', [HomepageController::class, 'index'])->name('home');
     Route::get('/detail-product/{id}', [HomepageController::class, 'detailProduct'])->name('detail-product');
+    Route::get('/category/{id}', [HomepageController::class, 'category'])->name('category');
     Route::get('/cart', [HomepageController::class, 'cart'])->name('cart');
     Route::post('/cart/{id}', [HomepageController::class, 'cartStore'])->name('cart.store');
-    Route::get('/category/{id}', [HomepageController::class, 'category'])->name('category');
-    Route::get('/checkout', [HomepageController::class, 'checkout'])->name('checkout');
-    Route::post('/checkout', [HomepageController::class, 'checkoutStore'])->name('checkout.store');
+    Route::post('/midtrans/finish', [HomepageController::class, 'finish']);
 });
 
 Route::middleware('auth')->group(function () {
@@ -42,5 +41,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+
 
 require __DIR__ . '/auth.php';
