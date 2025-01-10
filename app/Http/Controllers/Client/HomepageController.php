@@ -24,7 +24,8 @@ class HomepageController extends Controller
     {
         $products = Product::where('category_id', $id)->get();
         $categories = Category::all();
-        return view('client.category', compact('products', 'categories'));
+        $category = Category::find($id);
+        return view('client.category', compact('products', 'categories', 'category'));
     }
 
     public function detailProduct($id)
