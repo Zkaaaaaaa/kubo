@@ -35,7 +35,9 @@
                                         <td>{{ $product->name ?? '-' }}</td>
                                         <td>{{ $product->price ?? '-' }}</td>
                                         <td>{{ $product->description ?? '-' }}</td>
-                                        <td>{{ $product->photo ?? '-' }}</td>
+                                        <td>
+                                            <img src="{{ asset('storage/' . $product->photo) }}" width="50px" height="50px" alt="">
+                                        </td>
                                         <td>
                                             @include('admin.product.edit')
                                             @include('admin.product.delete')

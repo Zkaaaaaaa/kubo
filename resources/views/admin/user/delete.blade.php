@@ -16,7 +16,7 @@
             </div>
 
             <!-- Form untuk Menghapus user -->
-            <form action="{{ route('user.destroy', $user->id) }}" method="POST">
+            <form action="{{ route('admin.user.destroy', $user->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
 

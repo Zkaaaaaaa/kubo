@@ -12,7 +12,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('user.store') }}" method="POST" enctype="multipart/form-data">                
+            <form action="{{ route('admin.user.store') }}" method="POST" enctype="multipart/form-data">                
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">
@@ -34,6 +34,7 @@
                             <option value="">-- Pilih Role --</option>
                             <option value="admin">Admin</option>
                             <option value="employee">Employee</option>
+                            <option value="customer">Customer</option>
                         </select>
                     </div>
                 </div>

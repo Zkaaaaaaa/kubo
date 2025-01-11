@@ -16,7 +16,7 @@
             </div>
 
             <!-- Form untuk Menghapus category -->
-            <form action="{{ route('category.destroy', $category->id) }}" method="POST">
+            <form action="{{ route('employee.category.destroy', $category->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
 

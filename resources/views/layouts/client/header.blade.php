@@ -23,6 +23,9 @@
                     @endforeach
                 </div>
             </li>
+            <li class="nav-item">
+                <a href="{{ route('cart') }}" class="nav-link"><i class="fas fa-shopping-cart"></i></a>
+            </li>
         </ul>
 
         <!-- After login: Profile and Logout Dropdown -->

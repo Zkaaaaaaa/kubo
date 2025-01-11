@@ -16,7 +16,7 @@
             </div>
 
             <!-- Form untuk Menghapus Produk -->
-            <form action="{{ route('product.destroy', $product->id) }}" method="POST">
+            <form action="{{ route('employee.product.destroy', $product->id) }}" method="POST">
                 @csrf
                 @method('DELETE')
 

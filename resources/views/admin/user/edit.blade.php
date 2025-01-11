@@ -12,7 +12,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('user.update', $user->id) }}" method="POST" enctype="multipart/form-data">                
+            <form action="{{ route('admin.user.update', $user->id) }}" method="POST" enctype="multipart/form-data">                
                 @csrf
                 @method('PUT')
                 <div class="modal-body">
@@ -35,6 +35,7 @@
                             <option value="">-- Pilih Role --</option>
                             <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
                             <option value="employee" {{ $user->role == 'employee' ? 'selected' : '' }}>Employee</option>
+                            <option value="customer" {{ $user->role == 'customer' ? 'selected' : '' }}>Customer</option>
                         </select>
                     </div>
                 </div>

@@ -31,15 +31,17 @@
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
                                     <img src="{{ $cart->product->photo }}" alt="{{ $cart->product->name }}"
-                                        class="img-thumbnail m-3">
+                                        class="img-thumbnail m-3" style="width: 100px; height: 100px;">
                                     <div>
                                         <h4 class="mb-1"><b>{{ $cart->product->name }}</b></h4>
                                         <p class="mb-4 text-muted">Catatan: {{ $cart->note }}</p>
-                                        <p class="my-1">Jumlah: {{ $cart->quantity }}</p>
-                                        <p class="my-1">Harga: Rp{{ number_format($cart->product->price, 0, ',', '.') }}
-                                        </p>
-                                        <h5 class="font-weight-bold">Total harga:
-                                            Rp{{ number_format($productTotal, 0, ',', '.') }}</h5>
+                                        <div class="my-1 d-flex align-items-center">
+                                            <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity({{ $cart->id }}, -1)">-</button>
+                                            <span class="mx-2">{{ $cart->quantity }}</span>
+                                            <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity({{ $cart->id }}, 1)">+</button>
+                                        </div>
+                                        <p class="my-1">Harga: Rp{{ number_format($cart->product->price, 0, ',', '.') }}</p>
+                                        <h5 class="font-weight-bold">Total harga: Rp{{ number_format($productTotal, 0, ',', '.') }}</h5>
                                     </div>
                                 </div>
                             </div>
@@ -59,8 +61,29 @@
         </div>
     </div>
 
-
     <script type="text/javascript">
+        function updateQuantity(cartId, change) {
+            fetch(`/cart/update/${cartId}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+                body: JSON.stringify({ change: change }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        location.reload(); // Refresh halaman untuk memperbarui tampilan keranjang
+                    } else {
+                        alert(data.message || 'Terjadi kesalahan.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
         var payButton = document.getElementById('pay-button');
         payButton.addEventListener('click', function() {
             window.snap.pay('{{ $snap_token }}', {

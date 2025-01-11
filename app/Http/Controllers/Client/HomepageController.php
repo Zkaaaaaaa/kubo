@@ -30,6 +30,7 @@ class HomepageController extends Controller
         return view('client.category', compact('products', 'categories', 'category'));
     }
 
+    // detail product
     public function detailProduct($id)
     {
         $product = Product::find($id);
@@ -37,6 +38,7 @@ class HomepageController extends Controller
         return view('client.detail-product', compact('product', 'categories'));
     }
 
+    // cart
     public function cart()
     {
         $carts = History::where('status', 'cart')->where('user_id', Auth::user()->id)->get();
@@ -66,6 +68,7 @@ class HomepageController extends Controller
         return view('client.cart', compact('carts', 'categories', 'snap_token'));
     }
 
+    // add to cart
     public function cartStore(Request $request, $id)
     {
         $product = Product::find($id);
@@ -83,8 +86,31 @@ class HomepageController extends Controller
         return redirect()->route('cart');
     }
 
+    // midtrans
     public function finish(Request $request)
     {
         return $request->input('result_data');
+    }
+
+
+    // update jumlah item
+    public function updateQuantity(Request $request, $id)
+    {
+        $cart = History::find($id);
+        if (!$cart) {
+            return response()->json(['success' => false, 'message' => 'Keranjang tidak ditemukan.']);
+        }
+
+        $newQuantity = $cart->quantity + $request->change;
+
+        if ($newQuantity < 1) {
+            $cart->delete(); // Hapus item jika jumlah kurang dari 1
+            return response()->json(['success' => true]);
+        }
+
+        $cart->quantity = $newQuantity;
+        $cart->save();
+
+        return response()->json(['success' => true]);
     }
 }

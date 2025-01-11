@@ -12,7 +12,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="{{ route('category.store') }}" method="POST">
+            <form action="{{ route('employee.category.store') }}" method="POST">
                 @csrf
                 <div class="modal-body">
                     <div class="form-group">

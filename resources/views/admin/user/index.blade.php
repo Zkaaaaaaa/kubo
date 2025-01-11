@@ -33,8 +33,10 @@
                                         <td>
                                             @if( $user->role == 'admin')
                                             <span class="badge badge-danger">Admin</span>
-                                            @else
+                                            @elseif ($user->role == 'employee')
                                             <span class="badge badge-primary">Employee</span>
+                                            @elseif ($user->role == 'customer')
+                                            <span class="badge badge-success">Customer</span>
                                             @endif
                                         </td>
                                         <td>
