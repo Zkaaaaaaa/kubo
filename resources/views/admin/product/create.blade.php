@@ -38,7 +38,7 @@
                     </div>
                     <div class="form-group">
                         <label for="photo">Photo</label>
-                        <input type="text" name="photo" id="photo" class="form-control" placeholder="Masukan foto" required>
+                        <input type="file" name="photo" id="photo" class="form-control" placeholder="Masukan foto">
                     </div>
                 </div>
                 <div class="modal-footer">

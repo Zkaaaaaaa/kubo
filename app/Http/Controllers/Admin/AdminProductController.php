@@ -29,17 +29,29 @@ class AdminProductController extends Controller
             'name' => 'required|max:100',
             'price' => 'required|numeric',
             'description' => 'required|max:100',
-            'photo' => 'required|string',
-            
+            'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
+
         ]);
 
-        Product::create([
+        $product = Product::create([
             'category_id' => $request->category_id,
             'name' => $request->name,
             'price' => $request->price,
             'description' => $request->description,
-            'photo' => $request->photo,
         ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $file_name = $product->name . '-' . time() . '.' . $photo->getClientOriginalExtension();
+            
+            // simpan nama file ke database
+            $product->photo = $file_name;
+            $product->update();
+
+            // simpan file gambar ke sistem
+            $photo->move(public_path('storage'), $file_name);
+
+        }
 
         return redirect()->back()->with('success', 'Berhasil');
     }
@@ -53,7 +65,7 @@ class AdminProductController extends Controller
             'name' => 'required|max:100',
             'price' => 'required|numeric',
             'description' => 'required|max:100',
-            'photo' => 'required|string',
+            'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         ]);
 
         $product = Product::find($id);
@@ -62,8 +74,19 @@ class AdminProductController extends Controller
             'name' => $request->name,
             'price' => $request->price,
             'description' => $request->description,
-            'photo' => $request->photo,
         ]);
+
+        if ($request->hasFile('photo')) {
+            $photo = $request->file('photo');
+            $file_name = $product->name . '-' . time() . '.' . $photo->getClientOriginalExtension();
+            
+            // simpan nama file ke database
+            $product->photo = $file_name;
+            $product->update();
+
+            // simpan file gambar ke sistem
+            $photo->move(public_path('storage'), $file_name);
+        }
 
         return redirect()->back()->with('success', 'Berhasil');
     }
@@ -75,6 +98,6 @@ class AdminProductController extends Controller
     {
         $product = Product::find($id);
         $product->delete();
-        return redirect()->back()->with('success', 'Berhasil hapus ' . $product->name); 
+        return redirect()->back()->with('success', 'Berhasil hapus ' . $product->name);
     }
 }

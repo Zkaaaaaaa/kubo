@@ -21,7 +21,7 @@ class ProductFactory extends Factory
             'name' => fake()->firstName(),
             'price' => fake()->randomFloat(2,10,1000),
             'description' => fake()->text(200),
-            'photo' => "https://via.placeholder.com/150x100",
+            'photo' => "nasi_goreng.jpeg",
 
         ];
     }

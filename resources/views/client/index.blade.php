@@ -85,8 +85,9 @@
                                         @foreach ($products->where('category_id', $category->id) as $product)
                                             <div class="col-lg-3 col-md-4 col-6 mb-4">
                                                 <div class="card">
-                                                    <img class="card-img-top" src="{{ $product->photo }}"
-                                                        alt="Card image cap">
+                                                    <img class="card-img-top" src="{{ asset('storage/' . $product->photo) }}"
+                                                        alt="Card image cap"
+                                                        style="object-fit: cover; width: 100%; height: 200px;">
                                                     <div class="card-body">
                                                         <h5 class="card-title">{{ $product->name }}</h5>
                                                         <p class="card-text">RP.{{ number_format($product->price) }}</p>

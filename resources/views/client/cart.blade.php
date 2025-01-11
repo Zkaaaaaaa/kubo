@@ -30,7 +30,7 @@
                         <div class="card mb-3">
                             <div class="card-body">
                                 <div class="d-flex align-items-center">
-                                    <img src="{{ $cart->product->photo }}" alt="{{ $cart->product->name }}"
+                                    <img src="{{ asset('storage/' . $cart->product->photo) }}" alt="{{ $cart->product->name }}"
                                         class="img-thumbnail m-3" style="width: 100px; height: 100px;">
                                     <div>
                                         <h4 class="mb-1"><b>{{ $cart->product->name }}</b></h4>
