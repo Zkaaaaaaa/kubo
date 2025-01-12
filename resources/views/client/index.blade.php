@@ -2,6 +2,24 @@
 
 @section('title', 'Kubo')
 
+@section('style')
+    <style>
+        .carousel-item img {
+            object-fit: cover;
+            width: 100%;
+            height: 500px;
+        }
+
+        @media only screen and (max-width: 780px) {
+            .carousel-item img {
+                object-fit: cover;
+                width: 100%;
+                height: 200px;
+            }
+        }
+    </style>
+@endsection
+
 @section('content')
     <div class="container mb-5 pb-5">
         <div class="row">
@@ -23,13 +41,13 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img class="d-block w-100" src="https://via.placeholder.com/150x100" alt="First slide">
+                            <img class="d-block w-100" src="{{ asset('storage/' . $promo->photo_1) }}" alt="First slide">
                         </div>
                         <div class="carousel-item">
-                            <img class="d-block w-100" src="https://via.placeholder.com/150x100" alt="Second slide">
+                            <img class="d-block w-100" src="{{ asset('storage/' . $promo->photo_2) }}" alt="Second slide">
                         </div>
                         <div class="carousel-item">
-                            <img class="d-block w-100" src="https://via.placeholder.com/150x100" alt="Third slide">
+                            <img class="d-block w-100" src="{{ asset('storage/' . $promo->photo_3) }}" alt="Third slide">
                         </div>
                     </div>
                     <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">

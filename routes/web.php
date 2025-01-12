@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdminCategoryController;
 use App\Http\Controllers\Admin\AdminDashboardController;
 use App\Http\Controllers\Admin\AdminHistoryController;
 use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\Admin\AdminPromoController;
 use App\Http\Controllers\Admin\AdminUserController;
 use App\Http\Controllers\Client\HomepageController;
 use App\Http\Controllers\ProfileController;
@@ -23,6 +24,8 @@ Route::middleware(['auth', Employee::class])->name('employee.')->prefix('employe
     Route::resource('category', AdminCategoryController::class)->except(['show']);
     Route::resource('product', AdminProductController::class)->except(['show']);
     Route::resource('history', AdminHistoryController::class)->only(['index', 'store']);
+    Route::get('/promo', [AdminPromoController::class, 'edit'])->name('promo.edit');
+    Route::put('/promo', [AdminPromoController::class, 'update'])->name('promo.update');
 });
 
 // CLIENT Routes

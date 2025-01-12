@@ -46,6 +46,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a href="{{ route('employee.promo.edit') }}" class="nav-link">
+                            <i class="nav-icon fas fa-tag"></i>
+                            <p>Promo</p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a href="{{ route('employee.product.index') }}" class="nav-link">
                             <i class="nav-icon fas fa-list"></i>
                             <p>Product</p>

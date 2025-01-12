@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\History;
+use App\Models\Promo;
 use Illuminate\Support\Facades\Auth;
 use Midtrans\Snap;
 
@@ -19,7 +20,8 @@ class HomepageController extends Controller
     {
         $products = Product::all();
         $categories = Category::all();
-        return view('client.index', compact('products', 'categories'));
+        $promo = Promo::find(1);
+        return view('client.index', compact('products', 'categories', 'promo'));
     }
 
     public function category($id)
