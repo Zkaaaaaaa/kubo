@@ -13,24 +13,30 @@
                         style="object-fit: cover; width: 100%; height: 200px;">
                 </div>
                 <div class="col-md-12 mb-3">
-                    <h4><b>Nama : {{ $product->name }}</b></h4>
+                    <h4><b>{{ $product->name }}</b></h4>
                     <p>{{ $product->description }}</p>
-                    <h4><b>Harga : Rp.{{ number_format($product->price) }}</b></h4>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <h4><b>Rp.{{ number_format($product->price) }}</b></h4>
 
-                    <!-- Fitur jumlah produk -->
-                    <div class="d-flex align-items-center mb-3">
-                        <button type="button" id="minusButton" class="btn btn-secondary">-</button>
-                        <input type="number" name="quantity" id="quantity" class="form-control text-center mx-2"
-                            value="1" min="1" readonly>
-                        <button type="button" id="plusButton" class="btn btn-secondary">+</button>
+                        <!-- Fitur jumlah produk -->
+                        <div class="d-flex align-items-center">
+                            <button type="button" id="minusButton" class="btn btn-secondary btn-sm font-weight-bold"
+                                style="height: 38px;">-</button>
+                            <input type="number" name="quantity" id="quantity"
+                                class="form-control bg-white border-0 text-center mx-2" value="1" min="1"
+                                readonly style="width: 50px; height: 38px;">
+                            <button type="button" id="plusButton" class="btn btn-secondary btn-sm font-weight-bold"
+                                style="height: 38px;">+</button>
+                        </div>
+
                     </div>
 
                     <div class="mb-3">
                         <h4 class="font-weight-bold" for="note">Catatan :</h4>
-                        <textarea class="form-control" name="note" id="note" cols="30" rows="10"></textarea>
+                        <textarea class="form-control" name="note" id="note" cols="30" rows="5"></textarea>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-light col-12">Masukan Keranjang</button>
+                        <button type="submit" class="btn btn-light col-12 mt-5">Masukan Keranjang</button>
                     </div>
             </form>
         </div>

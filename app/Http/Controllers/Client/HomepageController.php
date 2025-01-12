@@ -115,4 +115,14 @@ class HomepageController extends Controller
 
         return response()->json(['success' => true]);
     }
+    // SEARCH
+    public function search(Request $request)
+    {
+        $categories = Category::all();
+        $query = $request->input('query');
+        $products = Product::where('name', 'like', "%$query%")
+            ->get();
+
+        return view('client.search', compact('products', 'query', 'categories'));
+    }
 }

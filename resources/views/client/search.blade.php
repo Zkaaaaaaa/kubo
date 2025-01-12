@@ -5,7 +5,7 @@
 @section('content')
     <div class="container mb-5 pb-5">
         <div class="row">
-            <h3><b>{{ $category->name }}</b></h3>
+            <h3><b>Hasil Pencarian</b></h3>
             {{-- SEARCH BAR --}}
             @include('client.components.search-input')
             {{-- ./SEARCH BAR --}}

@@ -37,6 +37,7 @@ Route::middleware(['auth', Customer::class])->group(function () {
     Route::post('/cart/{id}', [HomepageController::class, 'cartStore'])->name('cart.store');
     Route::post('/midtrans/finish', [HomepageController::class, 'finish']);
     Route::post('/cart/update/{id}', [HomepageController::class, 'updateQuantity']);
+    Route::get('/search', [HomepageController::class, 'search'])->name('search');
 });
 
 Route::middleware('auth')->group(function () {

@@ -13,7 +13,7 @@
         <div class="row">
             <div>
 
-                <div class="col-md-12 mb-3">
+                <div class="col-md-12 my-3">
                     <h3><b>Keranjangku</b></h3>
                 </div>
 
@@ -41,7 +41,7 @@
                                             <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity({{ $cart->id }}, 1)">+</button>
                                         </div>
                                         <p class="my-1">Harga: Rp{{ number_format($cart->product->price, 0, ',', '.') }}</p>
-                                        <h5 class="font-weight-bold">Total harga: Rp{{ number_format($productTotal, 0, ',', '.') }}</h5>
+                                        <h5 class="font-weight-bold">Total Rp. {{ number_format($productTotal, 0, ',', '.') }}</h5>
                                     </div>
                                 </div>
                             </div>
