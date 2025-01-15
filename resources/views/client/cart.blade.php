@@ -54,7 +54,7 @@
                 @endforelse
 
                 <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded">
-                    <h4>TOTAL: Rp {{ number_format($totalPrice, 0, ',', '.') }}</h4>
+                    <h4 name="total-price">TOTAL: Rp {{ number_format($totalPrice, 0, ',', '.') }}</h4>
                     <button id="pay-button" class="btn btn-warning">Pesan</button>
                 </div>
             </div>
@@ -105,7 +105,7 @@
         function sendResponseToServer(result) {
             var form = document.createElement('form');
             form.method = 'POST';
-            form.action = '/payment/finish';
+            form.action = '/midtrans/finish';
 
             var input = document.createElement('input');
             input.type = 'hidden';

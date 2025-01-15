@@ -13,9 +13,7 @@ use Midtrans\Snap;
 
 class HomepageController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    // homepage
     public function index()
     {
         $products = Product::all();
@@ -24,6 +22,7 @@ class HomepageController extends Controller
         return view('client.index', compact('products', 'categories', 'promo'));
     }
 
+    // category
     public function category($id)
     {
         $products = Product::where('category_id', $id)->get();
@@ -40,6 +39,24 @@ class HomepageController extends Controller
         return view('client.detail-product', compact('product', 'categories'));
     }
 
+     // add to cart
+     public function cartStore(Request $request, $id)
+     {
+         $product = Product::find($id);
+         $note = $request->note;
+         $quantity = $request->quantity;
+         $history = History::create([
+             'user_id' => Auth::user()->id,
+             'product_id' => $product->id,
+             'note' => $note,
+             'quantity' => $quantity,
+             'total' => $product->price * $quantity,
+             'status' => 'cart',
+             'date' => now(),
+         ]);
+         return redirect()->route('cart');
+     }
+
     // cart
     public function cart()
     {
@@ -54,10 +71,14 @@ class HomepageController extends Controller
         // Set 3DS transaction for credit card to true
         \Midtrans\Config::$is3ds = config('midtrans.is_3ds');
 
+        $totalAmount = $carts->sum(function ($cart) {
+            return $cart->product ? $cart->product->price * $cart->quantity : 0;
+        });
+
         $params = array(
             'transaction_details' => array(
                 'order_id' => rand(),
-                'gross_amount' => 10000,
+                'gross_amount' => (int)$totalAmount,
             ),
             'customer_details' => array(
                 'first_name' => Auth::user()->name,
@@ -70,30 +91,18 @@ class HomepageController extends Controller
         return view('client.cart', compact('carts', 'categories', 'snap_token'));
     }
 
-    // add to cart
-    public function cartStore(Request $request, $id)
-    {
-        $product = Product::find($id);
-        $note = $request->note;
-        $quantity = $request->quantity;
-        $history = History::create([
-            'user_id' => Auth::user()->id,
-            'product_id' => $product->id,
-            'note' => $note,
-            'quantity' => $quantity,
-            'total' => $product->price * $quantity,
-            'status' => 'cart',
-            'date' => now(),
-        ]);
-        return redirect()->route('cart');
-    }
-
     // midtrans
     public function finish(Request $request)
     {
-        return $request->input('result_data');
-    }
+        $request->validate([
+            'result_data' => 'required',
+        ]);
 
+        $result = json_decode($request->input('result_data'), true);
+
+        $categories = Category::all();
+        return view('client.finish', compact('categories'))->with('message', 'Payment completed successfully.');
+    }
 
     // update jumlah item
     public function updateQuantity(Request $request, $id)
@@ -125,4 +134,5 @@ class HomepageController extends Controller
 
         return view('client.search', compact('products', 'query', 'categories'));
     }
+
 }
