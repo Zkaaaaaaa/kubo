@@ -67,7 +67,7 @@
             {{-- ./SEARCH BAR --}}
 
             {{-- TAB KATEGORI --}}
-            <div class="col-12">
+            <div class="col-12">    
                 <div class="card card-tabs">
                     <div class="card-header p-0 pt-1">
                         <!-- Wrapper untuk membuat tab dapat digeser -->
@@ -106,7 +106,7 @@
                                                         <h5 class="card-title">{{ $product->name }}</h5>
                                                         <p class="card-text">RP.{{ number_format($product->price) }}</p>
                                                     </div>
-                                                    <a href="{{ route('detail-product', $product->id) }}" class="btn btn-primary">Tambah</a>
+                                                    <a href="{{ route('detail-product', $product->id) }}" class="btn btn-warning">Tambah</a>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -115,8 +115,7 @@
                             @endforeach
                         </div>
                     </div>
-                </div>
-                <!-- /.card -->
+                </div>             
             </div>
             {{-- ./TAB KATEGORI --}}
         </div>

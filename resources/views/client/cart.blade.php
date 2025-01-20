@@ -10,7 +10,7 @@
 
 @section('content')
     <div class="container mb-5 pb-5">
-        <div class="row">
+        <div class="d-flex justify-content-center align-items-center">
             <div>
 
                 <div class="col-md-12 my-3">
@@ -50,10 +50,19 @@
                         <p class="text-danger">Produk tidak ditemukan.</p>
                     @endif
                 @empty
-                    <p class="text-center">Keranjang Anda kosong.</p>
+                    
+                  <div>
+                    <div class=""><img class="card-img-top" src="{{ asset('storage/nasi_goreng.jpeg') }}"
+                        alt="Card image cap"
+                        style="object-fit: cover; width: 100%; height: 200px;"></div>
+                  </div>
+                  <h4 class="text-center">Keranjang Anda kosong! yuk pesan dibawah!</h4>
+                  <div class="d-flex justify-content-center align-items-center rounded">
+                    <a href="{{ route('home') }}" class="btn btn-warning">Pesan Sekarang</a>
+                  </div>
                 @endforelse
 
-                <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded">
+                <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded fixed-bottom mb-5 pb-5">
                     <h4 name="total-price">TOTAL: Rp {{ number_format($totalPrice, 0, ',', '.') }}</h4>
                     <button id="pay-button" class="btn btn-warning">Pesan</button>
                 </div>

@@ -14,7 +14,7 @@
         <!-- Title -->
         <h1 class="mb-4">Checkout Berhasil!</h1>
         <!-- Message -->
-        <p class="mb-4">Terima kasih telah berbelanja bersama kami. Pesanan Anda telah berhasil diproses.</p>
+        <p class="mb-4">Terima kasih telah berbelanja bersama kami. Pesanan Anda sedang diproses.</p>
         <!-- Button -->
         <a href="{{ route('home') }}" class="btn btn-primary btn-lg">Kembali ke Home</a>
     </div>

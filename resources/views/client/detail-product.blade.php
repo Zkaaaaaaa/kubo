@@ -33,10 +33,10 @@
 
                     <div class="mb-3">
                         <h4 class="font-weight-bold" for="note">Catatan :</h4>
-                        <textarea class="form-control" name="note" id="note" cols="30" rows="5"></textarea>
+                        <textarea class="form-control" name="note" id="note" cols="30" rows="5" placeholder="Masukkan catatan"></textarea>
                     </div>
                     <div>
-                        <button type="submit" class="btn btn-light col-12 mt-5">Masukan Keranjang</button>
+                        <button type="submit" class="btn btn-warning col-12 mt-5">Masukan Keranjang</button>
                     </div>
             </form>
         </div>

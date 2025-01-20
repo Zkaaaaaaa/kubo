@@ -13,6 +13,17 @@ use Midtrans\Snap;
 
 class HomepageController extends Controller
 {
+    // SEARCH
+    public function search(Request $request)
+    {
+        $categories = Category::all();
+        $query = $request->input('query');
+        $products = Product::where('name', 'like', "%$query%")
+            ->get();
+
+        return view('client.search', compact('products', 'query', 'categories'));
+    }
+
     // homepage
     public function index()
     {
@@ -57,11 +68,36 @@ class HomepageController extends Controller
          return redirect()->route('cart');
      }
 
+    // update jumlah item
+    public function updateQuantity(Request $request, $id)
+    {
+        $cart = History::find($id);
+        if (!$cart) {
+            return response()->json(['success' => false, 'message' => 'Keranjang tidak ditemukan.']);
+        }
+
+        $newQuantity = $cart->quantity + $request->change;
+
+        if ($newQuantity < 1) {
+            $cart->delete(); // Hapus item jika jumlah kurang dari 1
+            return response()->json(['success' => true]);
+        }
+
+        $cart->quantity = $newQuantity;
+        $cart->save();
+
+        return response()->json(['success' => true]);
+    }
+
     // cart
     public function cart()
     {
         $carts = History::where('status', 'cart')->where('user_id', Auth::user()->id)->get();
         $categories = Category::all();
+        if ($carts->isEmpty()) {
+            $snap_token = null;
+            return view('client.cart', compact('carts', 'categories', 'snap_token'));
+        }
         // Set your Merchant Server Key
         \Midtrans\Config::$serverKey = config('midtrans.server_key');
         // Set to Development/Sandbox Environment (default). Set to true for Production Environment (accept real transaction).
@@ -93,46 +129,30 @@ class HomepageController extends Controller
 
     // midtrans
     public function finish(Request $request)
-    {
-        $request->validate([
-            'result_data' => 'required',
-        ]);
+{
+    $categories = Category::all();
+    $request->validate([
+        'result_data' => 'required',
+    ]);
 
-        $result = json_decode($request->input('result_data'), true);
+    $result = json_decode($request->input('result_data'), true);
 
-        $categories = Category::all();
+    if (isset($result['status_code']) && $result['status_code'] == 200) {
+        // Perbarui status keranjang menjadi 'process'
+        $carts = History::where('status', 'cart')
+                        ->where('user_id', Auth::user()->id)
+                        ->get();
+
+        foreach ($carts as $cart) {
+            $cart->status = 'process';
+            $cart->save();
+        }
+
         return view('client.finish', compact('categories'))->with('message', 'Payment completed successfully.');
     }
 
-    // update jumlah item
-    public function updateQuantity(Request $request, $id)
-    {
-        $cart = History::find($id);
-        if (!$cart) {
-            return response()->json(['success' => false, 'message' => 'Keranjang tidak ditemukan.']);
-        }
+    return redirect()->route('cart')->with('error', 'Payment failed or canceled.');
+}
 
-        $newQuantity = $cart->quantity + $request->change;
-
-        if ($newQuantity < 1) {
-            $cart->delete(); // Hapus item jika jumlah kurang dari 1
-            return response()->json(['success' => true]);
-        }
-
-        $cart->quantity = $newQuantity;
-        $cart->save();
-
-        return response()->json(['success' => true]);
-    }
-    // SEARCH
-    public function search(Request $request)
-    {
-        $categories = Category::all();
-        $query = $request->input('query');
-        $products = Product::where('name', 'like', "%$query%")
-            ->get();
-
-        return view('client.search', compact('products', 'query', 'categories'));
-    }
 
 }
