@@ -50,23 +50,26 @@ class HomepageController extends Controller
         return view('client.detail-product', compact('product', 'categories'));
     }
 
-     // add to cart
-     public function cartStore(Request $request, $id)
-     {
-         $product = Product::find($id);
-         $note = $request->note;
-         $quantity = $request->quantity;
-         $history = History::create([
-             'user_id' => Auth::user()->id,
-             'product_id' => $product->id,
-             'note' => $note,
-             'quantity' => $quantity,
-             'total' => $product->price * $quantity,
-             'status' => 'cart',
-             'date' => now(),
-         ]);
-         return redirect()->route('cart');
-     }
+    // add to cart
+    public function cartStore(Request $request, $id)
+    {
+        $product = Product::find($id);
+        $note = $request->note;
+        $quantity = $request->quantity;
+        $token = Auth::user()->id . '-' . now()->format('Y-m-d');
+        // dd($token);
+        $history = History::create([
+            'user_id' => Auth::user()->id,
+            'product_id' => $product->id,
+            'note' => $note,
+            'quantity' => $quantity,
+            'total' => $product->price * $quantity,
+            'status' => 'cart',
+            'date' => now()->format('Y-m-d'),
+            'token' => $token,
+        ]);
+        return redirect()->route('cart');
+    }
 
     // update jumlah item
     public function updateQuantity(Request $request, $id)
@@ -129,30 +132,28 @@ class HomepageController extends Controller
 
     // midtrans
     public function finish(Request $request)
-{
-    $categories = Category::all();
-    $request->validate([
-        'result_data' => 'required',
-    ]);
+    {
+        $categories = Category::all();
+        $request->validate([
+            'result_data' => 'required',
+        ]);
 
-    $result = json_decode($request->input('result_data'), true);
+        $result = json_decode($request->input('result_data'), true);
 
-    if (isset($result['status_code']) && $result['status_code'] == 200) {
-        // Perbarui status keranjang menjadi 'process'
-        $carts = History::where('status', 'cart')
-                        ->where('user_id', Auth::user()->id)
-                        ->get();
+        if (isset($result['status_code']) && $result['status_code'] == 200) {
+            // Perbarui status keranjang menjadi 'process'
+            $carts = History::where('status', 'cart')
+                ->where('user_id', Auth::user()->id)
+                ->get();
 
-        foreach ($carts as $cart) {
-            $cart->status = 'process';
-            $cart->save();
+            foreach ($carts as $cart) {
+                $cart->status = 'process';
+                $cart->save();
+            }
+
+            return view('client.finish', compact('categories'))->with('message', 'Payment completed successfully.');
         }
 
-        return view('client.finish', compact('categories'))->with('message', 'Payment completed successfully.');
+        return redirect()->route('cart')->with('error', 'Payment failed or canceled.');
     }
-
-    return redirect()->route('cart')->with('error', 'Payment failed or canceled.');
-}
-
-
 }

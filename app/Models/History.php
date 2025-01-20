@@ -11,7 +11,7 @@ class History extends Model
     use HasFactory;
 
     protected $table = 'histories';
-    protected $fillable = ['date','name','product_id','note','total', 'quantity', 'status', 'table', 'user_id'];
+    protected $fillable = ['date','product_id','note','total', 'quantity', 'status', 'table', 'user_id', 'token'];
 
     public function product()
     {

@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('histories', function (Blueprint $table) {
             $table->id();
             $table->date('date');
-            $table->string('name')->nullable();
             $table->foreignId('product_id');
             $table->string('note')->nullable();
             $table->integer('total')->default(0);
@@ -22,6 +21,7 @@ return new class extends Migration
             $table->enum('status', ['cart', 'process', 'done']);
             $table->integer('table')->default(0);
             $table->foreignId('user_id');
+            $table->string('token')->nullable();
             $table->timestamps();
         });
     }

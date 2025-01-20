@@ -20,7 +20,7 @@
                         <h5 class="card-title">{{ $product->name }}</h5>
                         <p class="card-text">RP.{{ number_format($product->price) }}</p>
                     </div>
-                    <a href="{{ route('detail-product', $product->id) }}" class="btn btn-primary">Tambah</a>
+                    <a href="{{ route('detail-product', $product->id) }}" class="btn btn-warning">Tambah</a>
                 </div>
             </div>
             @endforeach

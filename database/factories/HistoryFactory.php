@@ -18,7 +18,6 @@ class HistoryFactory extends Factory
     {
         return [
             'date' => fake()->date(),
-            'name' => fake()->name(),
             'product_id' => fake()->numberBetween(1, 100),
             'note' => fake()->name(),
             'quantity' => fake()->numberBetween(1, 100),
@@ -26,6 +25,7 @@ class HistoryFactory extends Factory
             'table' => fake()->numberBetween(1, 100),
             'status' => fake()->randomElement(['cart', 'process', 'done']),
             'user_id' => fake()->numberBetween(1, 10),
+            'token' => fake()->text(10),
         ];
     }
 }

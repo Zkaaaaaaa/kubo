@@ -13,12 +13,24 @@ class AdminHistoryController extends Controller
      */
     public function index()
     {
-        $histories = History::all();
-        return view('admin.history.index', compact('histories'));
-    }
+        $histories = History::where('status', 'done')->get();
 
-    public function destroy(string $id)
-    {
-        //
+        // Gabungkan data berdasarkan token yang sama
+        $mergedHistories = $histories->groupBy('token')->map(function ($group) {
+            return [
+                'token' => $group->first()->token,
+                'date' => $group->first()->date,
+                'product_id' => $group->first()->product_id,
+                'note' => $group->first()->note,
+                'total' => $group->sum('total'), // Jumlahkan total
+                'quantity' => $group->sum('quantity'), // Jumlahkan quantity
+                'status' => $group->first()->status,
+                'table' => $group->first()->table,
+                'user_id' => $group->first()->user->name,
+            ];
+        });
+
+        // Kirimkan data yang sudah digabung ke view
+        return view('admin.history.index', ['histories' => $mergedHistories]);
     }
 }
