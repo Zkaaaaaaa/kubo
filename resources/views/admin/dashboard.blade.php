@@ -7,87 +7,115 @@
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-center">Welcome, {{ auth()->user()->name }}!</h1>
+                    <p class="text-center text-muted">Selamat bekerja boss!</p>
+                </div>
+            </div>
+            <!-- Stats Cards -->
             <div class="row">
-              {{-- BOX USER --}}
-                <div class="col-lg-12 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-success">
-                        <div class="inner">
-                            <h3>{{ $users }}</h3>
-
-                            <p>Total Users</p>
+                <div class="col-md-6 col-xl-4 mb-3">
+                    <!-- Total Users -->
+                    <div class="card bg-success text-white shadow">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title">Total Users</h5>
+                                    <h3>{{ $users }}</h3>
+                                </div>
+                                <div>
+                                    <i class="ion-person-add display-4"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="icon">
-                            <i class="ion-person-add"></i>
+                        <div class="card-footer text-center">
+                            <a href="{{ route('admin.user.index') }}" class="text-white">
+                                More Info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
-                        <a href="{{ route('admin.user.index') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
-    <!-- /.content -->
 @elseif(auth()->user()->role == 'employee')
     <!-- Main content -->
     <section class="content">
         <div class="container-fluid">
-            <!-- Small boxes (Stat box) -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <h1 class="text-center">Welcome, {{ auth()->user()->name }}!</h1>
+                    <p class="text-center text-muted">kerja kerja kerja</p>
+                </div>
+            </div>
+            <!-- Stats Cards -->
             <div class="row">
-                {{-- BOX CATEGORY --}}
-                <div class="col-lg-4 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-info">
-                        <div class="inner">
-                            <h3>{{ $categories }}</h3>
-
-                            <p>Total Categories</p>
+                <div class="col-md-6 col-xl-4 mb-3">
+                    <!-- Total Categories -->
+                    <div class="card bg-info text-white shadow">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title">Total Categories</h5>
+                                    <h3>{{ $categories }}</h3>
+                                </div>
+                                <div>
+                                    <i class="ion ion-bag display-4"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
+                        <div class="card-footer text-center">
+                            <a href="{{ route('employee.category.index') }}" class="text-white">
+                                More Info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
-                        <a href="{{ route('employee.category.index') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                {{-- BOX PRODUCT --}}
-                <div class="col-lg-4 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-warning">
-                        <div class="inner">
-                            <h3>{{ $products }}</h3>
-
-                            <p>Total Product</p>
+                <div class="col-md-6 col-xl-4 mb-3">
+                    <!-- Total Products -->
+                    <div class="card bg-warning text-dark shadow">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title">Total Products</h5>
+                                    <h3>{{ $products }}</h3>
+                                </div>
+                                <div>
+                                    <i class="ion ion-bag display-4"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-bag"></i>
+                        <div class="card-footer text-center">
+                            <a href="{{ route('employee.product.index') }}" class="text-dark">
+                                More Info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
-                        <a href="{{ route('employee.product.index') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
-                {{-- BOX HISTORY --}}
-                <div class="col-lg-4 col-12">
-                    <!-- small box -->
-                    <div class="small-box bg-danger">
-                        <div class="inner">
-                            <h3>{{ $histories }}</h3>
-
-                            <p>Total History</p>
+                <div class="col-md-6 col-xl-4 mb-3">
+                    <!-- Total History -->
+                    <div class="card bg-danger text-white shadow">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h5 class="card-title">Total History</h5>
+                                    <h3>{{ $histories }}</h3>
+                                </div>
+                                <div>
+                                    <i class="ion ion-pie-graph display-4"></i>
+                                </div>
+                            </div>
                         </div>
-                        <div class="icon">
-                            <i class="ion ion-pie-graph"></i>
+                        <div class="card-footer text-center">
+                            <a href="{{ route('employee.history.index') }}" class="text-white">
+                                More Info <i class="fas fa-arrow-circle-right"></i>
+                            </a>
                         </div>
-                        <a href="{{ route('employee.history.index') }}" class="small-box-footer">More info <i
-                                class="fas fa-arrow-circle-right"></i></a>
                     </div>
                 </div>
             </div>
-            <!-- /.row -->
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
-    <!-- /.content -->
 @endif
 @endsection

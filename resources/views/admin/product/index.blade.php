@@ -2,29 +2,32 @@
 
 @section('title', 'Product Management')
 
-
 @section('content')
-    <!-- Main content -->
-    <section class="content">
+<!-- Main content -->
+<section class="content">
+    <div class="container-fluid">
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card shadow-sm">
+                    <div class="card-header">
+                        <h3 class="card-title font-weight-bold text-black">Product Management</h3>
+                        <div class="card-tools">
+                            @include('admin.product.create')
+                        </div>
+                    </div>
                     <!-- /.card-header -->
                     <div class="card-body">
                         @include('components.alert-message')
-                        <div class="mb-3 text-right">
-                            @include('admin.product.create')
-                        </div>
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
+                        <table id="productTable" class="table table-bordered table-hover">
+                            <thead class="thead-dark">
                                 <tr>
-                                    <th>No</th>
-                                    <th>Category</th>
-                                    <th>Name</th>
-                                    <th>Price</th>
-                                    <th>Description</th>
-                                    <th>Photo</th>
-                                    <th>Action</th>
+                                    <th style="width: 5%">No</th>
+                                    <th style="width: 15%">Category</th>
+                                    <th style="width: 20%">Name</th>
+                                    <th style="width: 15%">Price</th>
+                                    <th style="width: 25%">Description</th>
+                                    <th style="width: 10%">Photo</th>
+                                    <th style="width: 10%">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -35,16 +38,19 @@
                                         <td>{{ $product->name ?? '-' }}</td>
                                         <td>{{ $product->price ?? '-' }}</td>
                                         <td>{{ $product->description ?? '-' }}</td>
-                                        <td>
-                                            <img src="{{ asset('storage/' . $product->photo) }}" width="50px" height="50px" alt="">
+                                        <td class="text-center">
+                                            <img src="{{ asset('storage/' . $product->photo) }}" width="50px" height="50px" alt="Photo">
                                         </td>
-                                        <td>
-                                            @include('admin.product.edit')
-                                            @include('admin.product.delete')
+                                        <td class="text-center">
+                                            <button class="btn btn-sm btn-warning" title="Edit">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                            <button class="btn btn-sm btn-danger" title="Delete">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
@@ -55,6 +61,24 @@
             <!-- /.col -->
         </div>
         <!-- /.row -->
-    </section>
-    <!-- /.content -->
+    </div>
+</section>
+<!-- /.content -->
 @endsection
+
+@push('styles')
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap4.min.css">
+@endpush
+
+@push('scripts')
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap4.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#productTable').DataTable({
+            responsive: true,
+            autoWidth: false,
+        });
+    });
+</script>
+@endpush

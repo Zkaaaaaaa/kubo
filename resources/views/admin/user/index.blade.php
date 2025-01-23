@@ -7,21 +7,25 @@
     <section class="content">
         <div class="row">
             <div class="col-12">
-                <div class="card">
-                    <!-- /.card-header -->
+                <div class="card shadow-sm">
+                    <div class="card-header bg-primary text-white">
+                        <h3 class="card-title">Employee Management</h3>
+                        <div class="card-tools">
+                            <button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#createUserModal">
+                                <i class="fas fa-user-plus"></i> Add Employee
+                            </button>
+                        </div>
+                    </div>
                     <div class="card-body">
                         @include('components.alert-message')
-                        <div class="mb-3 text-right">
-                            @include('admin.user.create')
-                        </div>
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
+                        <table id="example1" class="table table-bordered table-hover">
+                            <thead class="bg-light">
                                 <tr>
-                                    <th>No</th>
-                                    <th>Name</th>
-                                    <th>Email</th>
-                                    <th>Role</th>
-                                    <th>Action</th>
+                                    <th style="width: 5%;">No</th>
+                                    <th style="width: 25%;">Name</th>
+                                    <th style="width: 30%;">Email</th>
+                                    <th style="width: 20%;">Role</th>
+                                    <th style="width: 20%; text-align: center;">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -31,31 +35,36 @@
                                         <td>{{ $user->name ?? '-' }}</td>
                                         <td>{{ $user->email ?? '-' }}</td>
                                         <td>
-                                            @if( $user->role == 'admin')
-                                            <span class="badge badge-danger">Admin</span>
+                                            @if ($user->role == 'admin')
+                                                <span class="badge badge-danger">Admin</span>
                                             @elseif ($user->role == 'employee')
-                                            <span class="badge badge-primary">Employee</span>
+                                                <span class="badge badge-primary">Employee</span>
                                             @elseif ($user->role == 'customer')
-                                            <span class="badge badge-success">Customer</span>
+                                                <span class="badge badge-success">Customer</span>
                                             @endif
                                         </td>
-                                        <td>
-                                            @include('admin.user.edit')
-                                            @include('admin.user.delete')
+                                        <td class="text-center">
+                                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editUserModal-{{ $user->id }}">
+                                                <i class="fas fa-edit"></i> Edit
+                                            </button>
+                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteUserModal-{{ $user->id }}">
+                                                <i class="fas fa-trash"></i> Delete
+                                            </button>
                                         </td>
                                     </tr>
                                 @endforeach
-
                             </tbody>
                         </table>
                     </div>
-                    <!-- /.card-body -->
                 </div>
-                <!-- /.card -->
             </div>
-            <!-- /.col -->
         </div>
-        <!-- /.row -->
     </section>
-    <!-- /.content -->
+
+    <!-- Modals -->
+    @include('admin.user.create')
+    @foreach ($users as $user)
+        @include('admin.user.edit', ['user' => $user])
+        @include('admin.user.delete', ['user' => $user])
+    @endforeach
 @endsection

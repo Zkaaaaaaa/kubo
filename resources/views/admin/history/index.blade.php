@@ -7,52 +7,61 @@
     <section class="content">
         <div class="row">
             <div class="col-12">
-                <div class="card">
+                <div class="card shadow-sm">
+                    <div class="card-header text-black d-flex justify-content-between align-items-center">
+                        <h3 class="card-title">History</h3>
+                        <div id="table-buttons"></div>
+                    </div>
                     <div class="card-body">
                         @include('components.alert-message')
 
-                        <!-- Tombol di pojok kanan atas -->
-                        <div class="d-flex justify-content-end mb-3">
-                            <div id="table-buttons"></div>
-                        </div>
-
                         <!-- Tabel -->
-                        <table id="example1" class="table table-bordered table-striped">
-                            <thead>
-                                <tr>
-                                    <th>No</th>
-                                    <th>Date</th>
-                                    <th>Nomor Pesanan</th>
-                                    <th>Name</th>
-                                    <th>Quantity</th>
-                                    <th>Total</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($histories as $history)
+                        <div class="table-responsive">
+                            <table id="example1" class="table table-bordered table-striped table-hover">
+                                <thead class="bg-secondary text-white">
                                     <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ $history['date'] ?? "-" }}</td>
-                                        <td>{{ $history['token'] ?? "-" }}</td>
-                                        <td>{{ $history['user_id'] ?? "-" }}</td>
-                                        <td>{{ $history['quantity'] ?? "-" }}</td>
-                                        <td>{{ $history['total'] ?? "-" }}</td>
-                                        <td>
-                                            @if ($history['status'] == 'cart')
-                                                <span class="badge badge-warning">Cart</span>
-                                            @elseif ($history['status'] == 'process')
-                                                <span class="badge badge-primary">Process</span>
-                                            @elseif ($history['status'] == 'done')
-                                                <span class="badge badge-success">Done</span>
-                                            @else
-                                                <span class="badge badge-danger">No Status</span>
-                                            @endif
-                                        </td>
+                                        <th>No</th>
+                                        <th>Date</th>
+                                        <th>Order Number</th>
+                                        <th>Name</th>
+                                        <th>Quantity</th>
+                                        <th>Total</th>
+                                        <th>Status</th>
                                     </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    @foreach ($histories as $history)
+                                        <tr>
+                                            <td>{{ $loop->iteration }}</td>
+                                            <td>{{ $history['date'] ?? '-' }}</td>
+                                            <td>{{ $history['token'] ?? '-' }}</td>
+                                            <td>{{ $history['user_id'] ?? '-' }}</td>
+                                            <td>{{ $history['quantity'] ?? '-' }}</td>
+                                            <td>{{ $history['total'] ?? '-' }}</td>
+                                            <td>
+                                                @php
+                                                    $statusClasses = [
+                                                        'cart' => 'badge-warning',
+                                                        'process' => 'badge-primary',
+                                                        'done' => 'badge-success',
+                                                        'default' => 'badge-danger'
+                                                    ];
+                                                    $statusLabels = [
+                                                        'cart' => 'Cart',
+                                                        'process' => 'Process',
+                                                        'done' => 'Done',
+                                                        'default' => 'No Status'
+                                                    ];
+                                                    $statusClass = $statusClasses[$history['status'] ?? 'default'];
+                                                    $statusLabel = $statusLabels[$history['status'] ?? 'default'];
+                                                @endphp
+                                                <span class="badge {{ $statusClass }}">{{ $statusLabel }}</span>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,27 +71,28 @@
 
 @section('script')
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             const table = $("#example1").DataTable({
                 responsive: true,
                 lengthChange: true,
                 autoWidth: false,
                 paging: true,
                 dom: 'Bfrtip',
-                buttons: [{
+                buttons: [
+                    {
                         extend: 'excelHtml5',
                         text: '<i class="fas fa-file-excel"></i> Excel',
-                        className: 'btn btn-success'
+                        className: 'btn btn-success btn-sm'
                     },
                     {
                         extend: 'pdfHtml5',
                         text: '<i class="fas fa-file-pdf"></i> PDF',
-                        className: 'btn btn-danger'
+                        className: 'btn btn-danger btn-sm'
                     },
                     {
                         extend: 'print',
                         text: '<i class="fas fa-print"></i> Print',
-                        className: 'btn btn-primary'
+                        className: 'btn btn-primary btn-sm'
                     }
                 ]
             });
