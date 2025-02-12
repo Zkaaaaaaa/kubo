@@ -22,24 +22,24 @@ class AdminUserController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $request->validate([
-            'name' => 'required|max:100',
-            'email' => 'required|email|unique:users,email',
-            'role' => 'required|in:admin,employee',
-            'password' => 'required|min:8',
+        public function store(Request $request)
+        {
+            $request->validate([
+                'name' => 'required|max:100',
+                'email' => 'required|email|unique:users,email',
+                'role' => 'required|in:admin,employee,customer',
+                'password' => 'required|min:8',
 
-        ]);
+            ]);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'role' => $request->role,
-            'password' => Hash::make($request->password),
-        ]);;
-        return redirect()->back()->with('success', 'Berhasil');
-    }
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'role' => $request->role,
+                'password' => Hash::make($request->password),
+            ]);;
+            return redirect()->back()->with('success', 'Berhasil');
+        }
 
   
     /**
@@ -50,7 +50,7 @@ class AdminUserController extends Controller
         $request->validate([
             'name' => 'required|max:100',
             'email' => 'required|email|unique:users,email,'.$id,
-            'role' => 'required|in:admin,employee',
+            'role' => 'required|in:admin,employee,customer',
             'password' => 'nullable|min:8',
         ]); 
 

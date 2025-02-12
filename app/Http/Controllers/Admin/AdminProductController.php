@@ -63,7 +63,7 @@ class AdminProductController extends Controller
         $request->validate([
             'category_id' => 'required|string',
             'name' => 'required|max:100',
-            'price' => 'required|numeric',
+            'price' => 'required|integer|min:0',
             'description' => 'required|max:100',
             'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         ]);

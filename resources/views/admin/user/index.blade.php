@@ -11,9 +11,7 @@
                     <div class="card-header bg-primary text-white">
                         <h3 class="card-title">Employee Management</h3>
                         <div class="card-tools">
-                            <button type="button" class="btn btn-sm btn-light" data-toggle="modal" data-target="#createUserModal">
-                                <i class="fas fa-user-plus"></i> Add Employee
-                            </button>
+                            @include('admin.user.create')
                         </div>
                     </div>
                     <div class="card-body">
@@ -43,13 +41,9 @@
                                                 <span class="badge badge-success">Customer</span>
                                             @endif
                                         </td>
-                                        <td class="text-center">
-                                            <button type="button" class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editUserModal-{{ $user->id }}">
-                                                <i class="fas fa-edit"></i> Edit
-                                            </button>
-                                            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#deleteUserModal-{{ $user->id }}">
-                                                <i class="fas fa-trash"></i> Delete
-                                            </button>
+                                        <td class="text-center">                                            
+                                                @include('admin.user.edit', ['user' => $user])
+                                                @include('admin.user.delete', ['user' => $user])
                                         </td>
                                     </tr>
                                 @endforeach
@@ -61,10 +55,5 @@
         </div>
     </section>
 
-    <!-- Modals -->
-    @include('admin.user.create')
-    @foreach ($users as $user)
-        @include('admin.user.edit', ['user' => $user])
-        @include('admin.user.delete', ['user' => $user])
-    @endforeach
+    
 @endsection

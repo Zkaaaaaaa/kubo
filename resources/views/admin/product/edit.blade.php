@@ -31,7 +31,7 @@
                     </div>
                     <div class="form-group">
                         <label for="price">Price</label>
-                        <input type="number" name="price" id="price" class="form-control" placeholder="100000" value="{{ $product->price }}" required>
+                        <input type="text" name="price" id="price" class="form-control" placeholder="100000" value="{{ $product->price }}" required>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>

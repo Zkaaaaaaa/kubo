@@ -42,12 +42,8 @@
                                             <img src="{{ asset('storage/' . $product->photo) }}" width="50px" height="50px" alt="Photo">
                                         </td>
                                         <td class="text-center">
-                                            <button class="btn btn-sm btn-warning" title="Edit">
-                                                <i class="fas fa-edit"></i>
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" title="Delete">
-                                                <i class="fas fa-trash-alt"></i>
-                                            </button>
+                                            @include('admin.product.edit')
+                                            @include('admin.product.delete')
                                         </td>
                                     </tr>
                                 @endforeach
