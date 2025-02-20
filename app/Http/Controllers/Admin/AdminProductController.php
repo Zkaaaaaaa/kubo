@@ -25,7 +25,7 @@ class AdminProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'category_id' => 'required|string',
+            'category_id' => 'required|integer',
             'name' => 'required|max:100',
             'price' => 'required|numeric',
             'description' => 'required|max:100',
@@ -61,7 +61,7 @@ class AdminProductController extends Controller
     public function update(Request $request, string $id)
     {
         $request->validate([
-            'category_id' => 'required|string',
+            'category_id' => 'required|integer',
             'name' => 'required|max:100',
             'price' => 'required|integer|min:0',
             'description' => 'required|max:100',
