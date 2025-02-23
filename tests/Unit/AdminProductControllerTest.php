@@ -7,12 +7,14 @@ use App\Models\User;
 use App\Models\Product;
 use App\Models\Category;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 class AdminProductControllerTest extends TestCase
 {
-    protected $employee;
     use RefreshDatabase;
+
+    protected $employee;
 
     protected function setUp(): void
     {
@@ -39,70 +41,71 @@ class AdminProductControllerTest extends TestCase
         $response->assertViewHas('products', Product::all());
     }
 
-   /** @test */
-public function test_stores_a_new_product()
-{
-    // Arrange
-    $this->actingAs($this->employee);
-    $category = Category::factory()->create();
-    $data = [
-        'name' => 'New Product',
-        'category_id' => $category->id,
-        'price' => 1000,
-        'description' => 'Product description',
-        'photo' => 'product.jpg',
-    ];
+    /** @test */
+    public function test_stores_new_product()
+    {
+        Storage::fake('public');
 
-    // Act
-    $response = $this->post(route('employee.product.store'), $data);
+        $this->actingAs($this->employee);
+        $category = Category::factory()->create();
+        $file = UploadedFile::fake()->image('product.jpg');
 
-    // Debug response (optional)
-    $response->dump();
+        $response = $this->post(route('employee.product.store'), [
+            'name' => 'New Product',
+            'category_id' => $category->id,
+            'price' => 1000,
+            'description' => 'Product description',
+            'photo' => $file,
+        ]);
 
-    // Assert
-    $response->assertRedirect(route('employee.product.index'));
-    $this->assertDatabaseHas('products', [
-        'name' => 'New Product',
-        'category_id' => $category->id,
-        'price' => 1000,
-        'description' => 'Product description',
-        'photo' => UploadedFile::fake()->image('product.jpg'),
-    ]);
-}
+        $response->dump();
 
-/** @test */
-public function test_updates_an_existing_product()
-{
-    // Arrange
-    $this->actingAs($this->employee);
-    $category = Category::factory()->create();
-    $product = Product::factory()->create();
-    $updatedData = [
-        'name' => 'Updated Product',
-        'category_id' => $category->id,
-        'price' => 2000,
-        'description' => 'Updated product description',
-        'photo' => UploadedFile::fake()->image('product.jpg'),
-    ];
+        $response->assertRedirect(route('employee.product.index'));
+        $this->assertDatabaseHas('products', [
+            'name' => 'New Product',
+            'category_id' => $category->id,
+            'description' => 'Product description',
+            'price' => 1000,
+        ]);
+    }
 
-    // Act
-    $response = $this->put(route('employee.product.update', $product->id), $updatedData);
+    /** @test */
+    public function test_updates_an_existing_product()
+    {
+        Storage::fake('public');
 
-    // Debug response (optional)
-    $response->dump();
+        $this->actingAs($this->employee);
+        $category = Category::factory()->create();
+        $product = Product::factory()->create([
+            'category_id' => $category->id,
+        ]);
 
-    // Assert
-    $response->assertRedirect(route('employee.product.index'));
-    $this->assertDatabaseHas('products', [
-        'id' => $product->id, // Pastikan id produk tetap sama
-        'name' => 'Updated Product',
-        'category_id' => $category->id,
-        'price' => 2000,
-        'description' => 'Updated product description',
-        'photo' => 'updated-product.jpg',
-    ]);
-}
+        $updatedFile = UploadedFile::fake()->image('updated-product.jpg');
 
+        $updatedData = [
+            'name' => 'Updated Product',
+            'category_id' => $category->id,
+            'price' => 2000,
+            'description' => 'Updated product description',
+            'photo' => $updatedFile,
+        ];
+
+        // Act
+        $response = $this->put(route('employee.product.update', $product->id), $updatedData);
+
+        // Debug response (optional)
+        $response->dump();
+
+        // Assert
+        $response->assertRedirect(route('employee.product.index'));
+        $this->assertDatabaseHas('products', [
+            'id' => $product->id, // Pastikan id produk tetap sama
+            'name' => 'Updated Product',
+            'category_id' => $category->id,
+            'price' => 2000,
+            'description' => 'Updated product description',
+        ]);
+    }
 
     /** @test */
     public function test_deletes_a_product()

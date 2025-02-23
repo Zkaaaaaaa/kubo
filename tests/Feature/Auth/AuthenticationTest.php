@@ -10,16 +10,20 @@ class AuthenticationTest extends TestCase
 {
     use RefreshDatabase;
 
-    public function test_login_screen_can_be_rendered(): void
+    /** @test */
+    public function login_screen_can_be_rendered()
     {
         $response = $this->get('/login');
 
         $response->assertStatus(200);
     }
 
-    public function test_users_can_authenticate_using_the_login_screen(): void
+    /** @test */
+    public function users_can_authenticate_using_valid_credentials()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'password' => bcrypt('password'), // Pastikan password terenkripsi
+        ]);
 
         $response = $this->post('/login', [
             'email' => $user->email,
@@ -27,22 +31,27 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('home', absolute: false));
+        $response->assertRedirect(route('home')); // Sesuaikan dengan rute setelah login
     }
 
-    public function test_users_can_not_authenticate_with_invalid_password(): void
+    /** @test */
+    public function users_can_not_authenticate_with_invalid_password()
     {
-        $user = User::factory()->create();
+        $user = User::factory()->create([
+            'password' => bcrypt('password'),
+        ]);
 
-        $this->post('/login', [
+        $response = $this->post('/login', [
             'email' => $user->email,
             'password' => 'wrong-password',
         ]);
 
         $this->assertGuest();
+        $response->assertSessionHasErrors('email'); // Laravel biasanya mengembalikan error pada email jika login gagal
     }
 
-    public function test_users_can_logout(): void
+    /** @test */
+    public function authenticated_users_can_logout()
     {
         $user = User::factory()->create();
 
