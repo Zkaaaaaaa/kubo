@@ -14,6 +14,7 @@ use App\Http\Middleware\Employee;
 use App\Http\Controllers\Employee\OrderController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 // ADMIN Routes
 Route::middleware(['auth', Admin::class])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -32,6 +33,12 @@ Route::middleware(['auth', Employee::class])->name('employee.')->prefix('employe
     // Add order management routes
     Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
     Route::post('/orders/{id}/done', [OrderController::class, 'markAsDone'])->name('orders.done');
+
+    // Add notification routes
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unreadCount');
 });
 
 // CLIENT Routes
@@ -46,6 +53,7 @@ Route::middleware(['auth', Customer::class])->group(function () {
     Route::delete('/cart/{id}', [HomepageController::class, 'removeFromCart'])->name('remove-from-cart');
     Route::get('/search', [HomepageController::class, 'search'])->name('search');
     Route::get('/my-orders', [HomepageController::class, 'myOrders'])->name('my-orders');
+    Route::get('/order-detail/{id}', [HomepageController::class, 'orderDetail'])->name('order-detail');
 });
 
 Route::middleware('auth')->group(function () {
@@ -61,5 +69,16 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 });
+
+// Test notification route
+Route::get('/test-notification', function() {
+    $user = Auth::user();
+    $user->notify(new \App\Notifications\NewOrderNotification([
+        'message' => 'This is a test notification',
+        'link' => '/employee/orders',
+        'type' => 'system'
+    ]));
+    return 'Notification sent!';
+})->middleware('auth');
 
 require __DIR__ . '/auth.php';

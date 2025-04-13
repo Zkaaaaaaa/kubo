@@ -31,11 +31,29 @@
                     </div>
                     <div class="form-group">
                         <label for="price">Price</label>
-                        <input type="text" name="price" id="price" class="form-control" placeholder="100000" value="{{ $product->price }}" required>
+                        <input type="number" 
+                            name="price" 
+                            id="price" 
+                            class="form-control" 
+                            placeholder="100000" 
+                            value="{{ $product->price }}" 
+                            min="0"
+                            step="1"
+                            oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                            required>
+                        <small class="text-muted">Enter numbers only</small>
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <input type="text" name="description" id="description" class="form-control" placeholder="Masukkan description" value="{{ $product->description }}" required>
+                        <textarea 
+                            name="description" 
+                            id="description" 
+                            class="form-control" 
+                            placeholder="Masukkan description" 
+                            rows="4"
+                            maxlength="10000"
+                            required>{{ $product->description }}</textarea>
+                        <small class="text-muted">Maximum 10000 characters</small>
                     </div>
                     <div class="form-group">
                         <label for="photo">Photo</label>

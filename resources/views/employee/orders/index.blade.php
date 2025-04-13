@@ -27,11 +27,11 @@
                         <tbody>
                             @foreach($orders as $order)
                                 <tr>
-                                    <td>{{ $order['token'] }}</td>
-                                    <td>{{ $order['user']->name }}</td>
+                                    <td>{{ $order->token }}</td>
+                                    <td>{{ $order->user->name }}</td>
                                     <td>
                                         <ul class="list-unstyled">
-                                            @foreach($order['items'] as $item)
+                                            @foreach($order->items as $item)
                                                 <li>
                                                     {{ $item->product->name }} 
                                                     ({{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }})
@@ -39,11 +39,11 @@
                                             @endforeach
                                         </ul>
                                     </td>
-                                    <td>{{ $order['total_quantity'] }}</td>
-                                    <td>Rp {{ number_format($order['total_amount'], 0, ',', '.') }}</td>
-                                    <td>{{ $order['created_at']->format('d/m/Y H:i') }}</td>
+                                    <td>{{ $order->total_quantity }}</td>
+                                    <td>Rp {{ number_format($order->total_amount, 0, ',', '.') }}</td>
+                                    <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
                                     <td>
-                                        <form action="{{ route('employee.orders.done', $order['items']->first()->id) }}" method="POST" class="d-inline">
+                                        <form action="{{ route('employee.orders.done', $order->items->first()->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             <button type="submit" class="btn btn-success btn-sm">
                                                 <i class="fas fa-check"></i> Mark as Done

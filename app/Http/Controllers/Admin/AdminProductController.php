@@ -28,9 +28,8 @@ class AdminProductController extends Controller
             'category_id' => 'required|integer',
             'name' => 'required|max:100',
             'price' => 'required|numeric',
-            'description' => 'required|max:100',
+            'description' => 'required|max:10000',
             'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
-
         ]);
 
         $product = Product::create([
@@ -64,7 +63,7 @@ class AdminProductController extends Controller
             'category_id' => 'required|integer',
             'name' => 'required|max:100',
             'price' => 'required|integer|min:0',
-            'description' => 'required|max:100',
+            'description' => 'required|max:10000',
             'photo' => 'nullable|mimes:jpg,jpeg,png|max:2048',
         ]);
 

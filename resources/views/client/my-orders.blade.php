@@ -23,16 +23,16 @@
                         <tbody>
                             @foreach($orders as $order)
                                 <tr>
-                                    <td>{{ $order->order_number }}</td>
+                                    <td>{{ $order->token }}</td>
                                     <td>{{ $order->created_at->format('d/m/Y H:i') }}</td>
-                                    <td>RP.{{ number_format($order->total) }}</td>
+                                    <td>RP.{{ number_format($order->total_amount, 0, ',', '.') }}</td>
                                     <td>
-                                        <span class="badge badge-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'completed' ? 'success' : 'danger') }}">
+                                        <span class="badge badge-{{ $order->status == 'pending' ? 'warning' : ($order->status == 'done' ? 'success' : 'danger') }}">
                                             {{ ucfirst($order->status) }}
                                         </span>
                                     </td>
                                     <td>
-                                        <a href="{{ route('order-detail', $order->id) }}" class="btn btn-sm btn-info">Detail</a>
+                                        <a href="{{ route('order-detail', $order->items->first()->id) }}" class="btn btn-sm btn-info">Detail</a>
                                     </td>
                                 </tr>
                             @endforeach

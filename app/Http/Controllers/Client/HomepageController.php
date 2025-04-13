@@ -175,7 +175,7 @@ class HomepageController extends Controller
             ->get()
             ->groupBy('token')
             ->map(function ($group) {
-                return [
+                return (object)[
                     'token' => $group->first()->token,
                     'items' => $group,
                     'total_quantity' => $group->sum('quantity'),
@@ -186,6 +186,19 @@ class HomepageController extends Controller
             });
             
         return view('client.my-orders', compact('orders', 'categories'));
+    }
+
+    public function orderDetail($id)
+    {
+        $categories = Category::all();
+        $order = History::with('product')->findOrFail($id);
+        
+        // Get all items with the same token
+        $orderItems = History::where('token', $order->token)
+            ->with('product')
+            ->get();
+            
+        return view('client.order-detail', compact('order', 'orderItems', 'categories'));
     }
 
     // remove from cart
