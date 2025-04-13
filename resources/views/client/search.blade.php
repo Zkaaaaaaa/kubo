@@ -1,29 +1,34 @@
 @extends('layouts.client.app')
 
-@section('title', 'Kubo')
+@section('title', 'Hasil Pencarian')
+
+@include('client.components.client-styles')
 
 @section('content')
-    <div class="container mb-5 pb-5">
+    <div class="container">
         <div class="row">
-            <h3><b>Hasil Pencarian</b></h3>
-            {{-- SEARCH BAR --}}
-            @include('client.components.search-input')
-            {{-- ./SEARCH BAR --}}
-
-            @foreach ($products as $product)
-            <div class="col-lg-3 col-md-4 col-6 mb-4">
+            <div class="col-12">
                 <div class="card">
-                    <img class="card-img-top" src="{{ asset('storage/' . $product->photo) }}"
-                        alt="Card image cap"
-                        style="object-fit: cover; width: 100%; height: 200px;">
                     <div class="card-body">
-                        <h5 class="card-title">{{ $product->name }}</h5>
-                        <p class="card-text">RP.{{ number_format($product->price) }}</p>
+                        <h4 class="card-title mb-4">Hasil Pencarian untuk "{{ $query }}"</h4>
+                        <div class="row product-grid">
+                            @foreach($products as $product)
+                                <div class="col-lg-3 col-md-4 col-6">
+                                    <div class="card product-card">
+                                        <img class="card-img-top" src="{{ asset('storage/' . $product->photo) }}"
+                                            alt="{{ $product->name }}">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ $product->name }}</h5>
+                                            <p class="card-text">RP.{{ number_format($product->price) }}</p>
+                                        </div>
+                                        <a href="{{ route('detail-product', $product->id) }}" class="btn btn-warning">Tambah ke Keranjang</a>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
                     </div>
-                    <a href="{{ route('detail-product', $product->id) }}" class="btn btn-primary">Tambah</a>
                 </div>
             </div>
-            @endforeach
         </div>
     </div>
 @endsection

@@ -19,7 +19,7 @@ class ProductFactory extends Factory
         return [
             'category_id' => fake()->numberBetween(1, 5),
             'name' => fake()->firstName(),
-            'price' => fake()->randomFloat(2,10,1000),
+            'price' => fake()->numberBetween(10000, 50000),
             'description' => fake()->text(200),
             'photo' => "nasi_goreng.jpeg",
 

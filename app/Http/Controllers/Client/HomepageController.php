@@ -10,6 +10,8 @@ use App\Models\History;
 use App\Models\Promo;
 use Illuminate\Support\Facades\Auth;
 use Midtrans\Snap;
+use App\Notifications\DatabaseOrderNotification;
+use App\Models\User;
 
 class HomepageController extends Controller
 {
@@ -149,11 +151,50 @@ class HomepageController extends Controller
             foreach ($carts as $cart) {
                 $cart->status = 'process';
                 $cart->save();
+
+                // Send notification to all employees
+                $employees = User::where('role', 'employee')->get();
+                foreach ($employees as $employee) {
+                    $employee->notify(new DatabaseOrderNotification($cart, Auth::user()));
+                }
             }
 
             return view('client.finish', compact('categories'))->with('message', 'Payment completed successfully.');
         }
 
         return redirect()->route('cart')->with('error', 'Payment failed or canceled.');
+    }
+
+    public function myOrders()
+    {
+        $categories = Category::all();
+        $orders = History::where('user_id', Auth::user()->id)
+            ->where('status', '!=', 'cart')
+            ->with('product')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy('token')
+            ->map(function ($group) {
+                return [
+                    'token' => $group->first()->token,
+                    'items' => $group,
+                    'total_quantity' => $group->sum('quantity'),
+                    'total_amount' => $group->sum('total'),
+                    'status' => $group->first()->status,
+                    'created_at' => $group->first()->created_at
+                ];
+            });
+            
+        return view('client.my-orders', compact('orders', 'categories'));
+    }
+
+    // remove from cart
+    public function removeFromCart($id)
+    {
+        $cart = History::find($id);
+        if ($cart && $cart->user_id == Auth::user()->id) {
+            $cart->delete();
+        }
+        return redirect()->route('cart');
     }
 }

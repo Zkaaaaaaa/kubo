@@ -41,6 +41,9 @@
                     <a class="dropdown-item" href="{{ route('profile.edit') }}">
                         <i class="fas fa-user"></i> Profile
                     </a>
+                    <a class="dropdown-item" href="{{ route('my-orders') }}">
+                        <i class="fas fa-list"></i> My Orders
+                    </a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="dropdown-item text-danger">

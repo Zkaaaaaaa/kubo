@@ -6,67 +6,129 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
     </script>
+    <style>
+        .cart-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .cart-item {
+            transition: all 0.3s ease;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .cart-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        .quantity-control {
+            background: #f8f9fa;
+            border-radius: 20px;
+            padding: 5px 10px;
+        }
+        .quantity-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .total-section {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        .empty-cart {
+            text-align: center;
+            padding: 40px;
+        }
+        .empty-cart img {
+            max-width: 300px;
+            margin-bottom: 20px;
+        }
+    </style>
 @endsection
 
 @section('content')
     <div class="container mb-5 pb-5">
-        <div class="d-flex justify-content-center align-items-center">
-            <div>
+        <div class="cart-container">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0"><b>Keranjang Belanja</b></h2>
+                <span class="badge bg-warning text-dark">{{ count($carts) }} Item</span>
+            </div>
 
-                <div class="col-md-12 my-3">
-                    <h3><b>Keranjangku</b></h3>
-                </div>
+            @php
+                $totalPrice = 0;
+            @endphp
 
-                @php
-                    $totalPrice = 0; // Inisialisasi total harga
-                @endphp
-
-                @forelse ($carts as $cart)
-                    @if ($cart->product)
-                        @php
-                            $productTotal = $cart->product->price * $cart->quantity; // Hitung total harga per produk
-                            $totalPrice += $productTotal; // Tambahkan ke total keseluruhan
-                        @endphp
-                        <div class="card mb-3">
-                            <div class="card-body">
-                                <div class="d-flex align-items-center">
-                                    <img src="{{ asset('storage/' . $cart->product->photo) }}" alt="{{ $cart->product->name }}"
-                                        class="img-thumbnail m-3" style="width: 100px; height: 100px;">
-                                    <div>
-                                        <h4 class="mb-1"><b>{{ $cart->product->name }}</b></h4>
-                                        <p class="mb-4 text-muted">Catatan: {{ $cart->note }}</p>
-                                        <div class="my-1 d-flex align-items-center">
-                                            <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity({{ $cart->id }}, -1)">-</button>
-                                            <span class="mx-2">{{ $cart->quantity }}</span>
-                                            <button class="btn btn-sm btn-outline-secondary" onclick="updateQuantity({{ $cart->id }}, 1)">+</button>
+            @forelse ($carts as $cart)
+                @if ($cart->product)
+                    @php
+                        $productTotal = $cart->product->price * $cart->quantity;
+                        $totalPrice += $productTotal;
+                    @endphp
+                    <div class="card cart-item mb-3">
+                        <div class="card-body">
+                            <div class="row align-items-center">
+                                <div class="col-md-3">
+                                    <img src="{{ asset('storage/' . $cart->product->photo) }}" 
+                                         alt="{{ $cart->product->name }}"
+                                         class="img-fluid rounded" 
+                                         style="width: 100%; height: 120px; object-fit: cover;">
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="d-flex justify-content-between align-items-start">
+                                        <div>
+                                            <h5 class="mb-1"><b>{{ $cart->product->name }}</b></h5>
+                                            <p class="text-muted mb-2">Catatan: {{ $cart->note }}</p>
                                         </div>
-                                        <p class="my-1">Harga: Rp{{ number_format($cart->product->price, 0, ',', '.') }}</p>
-                                        <h5 class="font-weight-bold">Total Rp. {{ number_format($productTotal, 0, ',', '.') }}</h5>
+                                        <h5 class="text-warning mb-0">Rp{{ number_format($productTotal, 0, ',', '.') }}</h5>
+                                    </div>
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <div class="quantity-control d-flex align-items-center">
+                                            <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                    onclick="updateQuantity({{ $cart->id }}, -1)">-</button>
+                                            <span class="mx-3">{{ $cart->quantity }}</span>
+                                            <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                    onclick="updateQuantity({{ $cart->id }}, 1)">+</button>
+                                        </div>
+                                        <p class="mb-0">Rp{{ number_format($cart->product->price, 0, ',', '.') }}/item</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    @else
-                        <p class="text-danger">Produk tidak ditemukan.</p>
-                    @endif
-                @empty
-                    
-                  <div>
-                    <div class=""><img class="card-img-top" src="{{ asset('storage/nasi_goreng.jpeg') }}"
-                        alt="Card image cap"
-                        style="object-fit: cover; width: 100%; height: 200px;"></div>
-                  </div>
-                  <h4 class="text-center">Keranjang Anda kosong! yuk pesan dibawah!</h4>
-                  <div class="d-flex justify-content-center align-items-center rounded">
-                    <a href="{{ route('home') }}" class="btn btn-warning">Pesan Sekarang</a>
-                  </div>
-                @endforelse
-
-                <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded fixed-bottom mb-5 pb-5">
-                    <h4 name="total-price">TOTAL: Rp {{ number_format($totalPrice, 0, ',', '.') }}</h4>
-                    <button id="pay-button" class="btn btn-warning">Pesan</button>
+                    </div>
+                @else
+                    <div class="alert alert-danger">Produk tidak ditemukan.</div>
+                @endif
+            @empty
+                <div class="empty-cart">
+                    <img src="{{ asset('storage/nasi_goreng.jpeg') }}" 
+                         alt="Empty Cart" 
+                         class="img-fluid rounded">
+                    <h4 class="mt-4">Keranjang Anda kosong!</h4>
+                    <p class="text-muted mb-4">Yuk pesan makanan favoritmu sekarang!</p>
+                    <a href="{{ route('home') }}" class="btn btn-warning btn-lg">Pesan Sekarang</a>
                 </div>
-            </div>
+            @endforelse
+
+            @if(count($carts) > 0)
+                <div class="total-section">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h4 class="mb-0">Total Pembayaran</h4>
+                        <h4 class="text-warning mb-0">Rp {{ number_format($totalPrice, 0, ',', '.') }}</h4>
+                    </div>
+                    <button id="pay-button" class="btn btn-warning w-100 mt-3 py-3">
+                        Lanjutkan Pembayaran
+                    </button>
+                </div>
+            @endif
         </div>
     </div>
 

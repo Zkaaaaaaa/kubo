@@ -11,6 +11,8 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Middleware\Admin;
 use App\Http\Middleware\Customer;
 use App\Http\Middleware\Employee;
+use App\Http\Controllers\Employee\OrderController;
+use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
 // ADMIN Routes
 Route::middleware(['auth', Admin::class])->name('admin.')->prefix('admin')->group(function () {
@@ -26,6 +28,10 @@ Route::middleware(['auth', Employee::class])->name('employee.')->prefix('employe
     Route::resource('history', AdminHistoryController::class)->only(['index', 'store']);
     Route::get('/promo', [AdminPromoController::class, 'edit'])->name('promo.edit');
     Route::put('/promo', [AdminPromoController::class, 'update'])->name('promo.update');
+    
+    // Add order management routes
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::post('/orders/{id}/done', [OrderController::class, 'markAsDone'])->name('orders.done');
 });
 
 // CLIENT Routes
@@ -35,9 +41,11 @@ Route::middleware(['auth', Customer::class])->group(function () {
     Route::get('/category/{id}', [HomepageController::class, 'category'])->name('category');
     Route::get('/cart', [HomepageController::class, 'cart'])->name('cart');
     Route::post('/cart/{id}', [HomepageController::class, 'cartStore'])->name('cart.store');
-    Route::post('/midtrans/finish', [HomepageController::class, 'finish']);
-    Route::post('/cart/update/{id}', [HomepageController::class, 'updateQuantity']);
+    Route::post('/midtrans/finish', [HomepageController::class, 'finish'])->name('finish');
+    Route::post('/cart/update/{id}', [HomepageController::class, 'updateQuantity'])->name('update-cart');
+    Route::delete('/cart/{id}', [HomepageController::class, 'removeFromCart'])->name('remove-from-cart');
     Route::get('/search', [HomepageController::class, 'search'])->name('search');
+    Route::get('/my-orders', [HomepageController::class, 'myOrders'])->name('my-orders');
 });
 
 Route::middleware('auth')->group(function () {
@@ -47,6 +55,11 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-
+// Notification routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
+});
 
 require __DIR__ . '/auth.php';

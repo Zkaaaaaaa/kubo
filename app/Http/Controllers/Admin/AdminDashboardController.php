@@ -18,7 +18,25 @@ class AdminDashboardController extends Controller
         $users = User::all()->count();
         $categories = Category::all()->count();
         $products = Product::all()->count();
-        $histories = History::all()->count();
+        
+        // Get history counts grouped by status and token
+        $historyCounts = History::selectRaw('status, count(DISTINCT token) as count')
+            ->groupBy('status')
+            ->get()
+            ->pluck('count', 'status')
+            ->toArray();
+
+        // Get total orders (unique tokens)
+        $totalOrders = History::select('token')->distinct()->count();
+
+        // Ensure all statuses are present with 0 count if they don't exist
+        $histories = [
+            'cart' => $historyCounts['cart'] ?? 0,
+            'process' => $historyCounts['process'] ?? 0,
+            'done' => $historyCounts['done'] ?? 0,
+            'total' => $totalOrders
+        ];
+
         return view('admin.dashboard', compact('users', 'categories', 'products', 'histories'));
     }
 }
