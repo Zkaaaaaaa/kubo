@@ -14,7 +14,6 @@ use App\Http\Middleware\Employee;
 use App\Http\Controllers\Employee\OrderController;
 use App\Http\Controllers\NotificationController;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 // ADMIN Routes
 Route::middleware(['auth', Admin::class])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
@@ -70,15 +69,5 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
 });
 
-// Test notification route
-Route::get('/test-notification', function() {
-    $user = Auth::user();
-    $user->notify(new \App\Notifications\NewOrderNotification([
-        'message' => 'This is a test notification',
-        'link' => '/employee/orders',
-        'type' => 'system'
-    ]));
-    return 'Notification sent!';
-})->middleware('auth');
 
 require __DIR__ . '/auth.php';
