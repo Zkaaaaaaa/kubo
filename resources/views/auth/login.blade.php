@@ -1,22 +1,22 @@
 <x-guest-layout>
-    <div class="min-h-screen flex flex-col items-center justify-center bg-white px-4">
+    <div class="min-h-screen flex flex-col items-center justify-start pt-20 bg-white px-4">
         <!-- Logo and Brand -->
-        <div class="mb-8 text-center">
+        <div class="mb-12 text-center">
             <div class="mb-4">
-                <svg class="w-24 h-24 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <svg class="w-16 h-16 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <!-- Simplified angel with crown icon - you can replace this with your actual logo -->
                     <path d="M50 10 L60 25 L40 25 Z" stroke="black" stroke-width="1" fill="none"/>
                     <path d="M30 35 Q50 20 70 35" stroke="black" stroke-width="1" fill="none"/>
                 </svg>
             </div>
-            <h1 class="text-2xl font-medium tracking-wider">Kubo Kopi</h1>
+            <h1 class="text-2xl font-medium tracking-wider text-gray-800">Kubo Kopi</h1>
         </div>
 
-        <div class="w-full max-w-sm">
+        <div class="w-full max-w-[320px]">
             <!-- Session Status -->
             <x-auth-session-status class="mb-4" :status="session('status')" />
 
-            <form method="POST" action="{{ route('login') }}" class="space-y-4">
+            <form method="POST" action="{{ route('login') }}" class="space-y-3">
                 @csrf
 
                 <!-- Email Address -->
@@ -30,7 +30,7 @@
                         autofocus 
                         autocomplete="username"
                         placeholder="Masukkan email"
-                        class="w-full px-4 py-3 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
+                        class="w-full h-12 px-4 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
                     />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
@@ -44,7 +44,7 @@
                         required 
                         autocomplete="current-password"
                         placeholder="Masukkan Password"
-                        class="w-full px-4 py-3 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
+                        class="w-full h-12 px-4 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
                     />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
@@ -63,30 +63,29 @@
                 </div>
 
                 <!-- Login Button -->
-                <div>
-                    <button type="submit" class="w-full py-3 px-4 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition duration-150 ease-in-out shadow-sm">
+                <div class="pt-2">
+                    <button type="submit" class="w-full h-12 bg-gray-600 hover:bg-gray-700 text-white font-medium rounded-lg transition duration-150 ease-in-out">
                         Masuk
                     </button>
                 </div>
 
                 <!-- Additional Links -->
-                <div class="flex items-center justify-between text-sm">
-                    <div></div> <!-- Empty div for spacing -->
+                <div class="flex flex-col items-center space-y-3 pt-2">
                     @if (Route::has('password.request'))
-                        <a class="text-gray-600 hover:text-gray-800" href="{{ route('password.request') }}">
+                        <a class="text-sm text-gray-600 hover:text-gray-800" href="{{ route('password.request') }}">
                             Lupa password?
                         </a>
                     @endif
-                </div>
 
-                @if (Route::has('register'))
-                    <div class="text-center text-sm mt-4">
-                        <span class="text-gray-600">Belum punya akun?</span>
-                        <a href="{{ route('register') }}" class="text-gray-800 font-medium hover:text-gray-600 ml-1">
-                            Daftar
-                        </a>
-                    </div>
-                @endif
+                    @if (Route::has('register'))
+                        <div class="text-sm">
+                            <span class="text-gray-600">Belum punya akun?</span>
+                            <a href="{{ route('register') }}" class="text-gray-800 font-medium hover:text-gray-600 ml-1">
+                                Daftar
+                            </a>
+                        </div>
+                    @endif
+                </div>
             </form>
         </div>
     </div>
