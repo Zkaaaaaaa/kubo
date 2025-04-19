@@ -30,7 +30,7 @@
                         autofocus 
                         autocomplete="username"
                         placeholder="Masukkan email"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
+                        class="w-full px-4 py-3 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
                     />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
@@ -44,7 +44,7 @@
                         required 
                         autocomplete="current-password"
                         placeholder="Masukkan Password"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
+                        class="w-full px-4 py-3 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
                     />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
@@ -80,7 +80,7 @@
                 </div>
 
                 @if (Route::has('register'))
-                    <div class="text-center text-sm">
+                    <div class="text-center text-sm mt-4">
                         <span class="text-gray-600">Belum punya akun?</span>
                         <a href="{{ route('register') }}" class="text-gray-800 font-medium hover:text-gray-600 ml-1">
                             Daftar
