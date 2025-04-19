@@ -29,7 +29,7 @@ class AdminUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_shows_all_users()
+    public function test_shows_all_users()
     {
         // Arrange
         $this->actingAs($this->admin);
@@ -44,7 +44,7 @@ class AdminUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_stores_a_new_user()
+    public function test_stores_a_new_user()
     {
         // Arrange
         $this->actingAs($this->admin);
@@ -69,7 +69,7 @@ class AdminUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_updates_an_existing_user()
+    public function test_updates_an_existing_user()
     {
         // Arrange
         $this->actingAs($this->admin);
@@ -95,7 +95,7 @@ class AdminUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_deletes_a_user()
+    public function test_deletes_a_user()
     {
         // Arrange
         $this->actingAs($this->admin);
@@ -110,7 +110,7 @@ class AdminUserControllerTest extends TestCase
     }
 
     /** @test */
-    public function it_blocks_non_admin_users()
+    public function test_blocks_non_admin_users()
     {
         // Arrange
         $nonAdmin = User::factory()->create([
@@ -123,6 +123,6 @@ class AdminUserControllerTest extends TestCase
         $response = $this->get(route('admin.user.index'));
 
         // Assert
-        $response->assertStatus(403);
+        $response->assertStatus(403); // Should return forbidden status
     }
 }

@@ -177,7 +177,7 @@
 @section('content')
     <div class="container mb-4 pb-4">
         {{-- HERO SECTION --}}
-        <div class="hero-section">
+        <div class="hero-section mt-3">
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-8">

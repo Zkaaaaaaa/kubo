@@ -22,7 +22,8 @@ class AuthenticationTest extends TestCase
     public function users_can_authenticate_using_valid_credentials()
     {
         $user = User::factory()->create([
-            'password' => bcrypt('password'), // Pastikan password terenkripsi
+            'password' => bcrypt('password'),
+            'role' => 'customer' // Set role as customer
         ]);
 
         $response = $this->post('/login', [
@@ -31,7 +32,41 @@ class AuthenticationTest extends TestCase
         ]);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(route('home')); // Sesuaikan dengan rute setelah login
+        $response->assertRedirect(route('home')); // This is correct for customer role
+    }
+
+    /** @test */
+    public function admin_can_authenticate_using_valid_credentials()
+    {
+        $admin = User::factory()->create([
+            'password' => bcrypt('password'),
+            'role' => 'admin'
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $admin->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('admin.dashboard'));
+    }
+
+    /** @test */
+    public function employee_can_authenticate_using_valid_credentials()
+    {
+        $employee = User::factory()->create([
+            'password' => bcrypt('password'),
+            'role' => 'employee'
+        ]);
+
+        $response = $this->post('/login', [
+            'email' => $employee->email,
+            'password' => 'password',
+        ]);
+
+        $this->assertAuthenticated();
+        $response->assertRedirect(route('employee.dashboard'));
     }
 
     /** @test */
