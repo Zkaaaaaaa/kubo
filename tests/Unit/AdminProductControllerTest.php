@@ -53,7 +53,7 @@ class AdminProductControllerTest extends TestCase
         Storage::fake('public');
 
         $this->actingAs($this->employee);
-        $file = UploadedFile::fake()->image('product.jpg');
+        $file = UploadedFile::fake()->image('nasi_goreng.jpeg');
 
         $response = $this->from(route('employee.product.index'))->post(route('employee.product.store'), [
             'name' => 'New Product',
@@ -76,7 +76,7 @@ class AdminProductControllerTest extends TestCase
 
         $product = Product::where('name', 'New Product')->first();
         $this->assertNotNull($product->photo);
-        $this->assertTrue(file_exists(public_path('storage/' . $product->photo)));
+        $this->assertTrue(Storage::disk('public')->exists($product->photo));
     }
 
     /** @test */
@@ -98,18 +98,13 @@ class AdminProductControllerTest extends TestCase
     /** @test */
     public function test_updates_an_existing_product()
     {
-        // Setup storage
         Storage::fake('public');
-        if (!file_exists(public_path('storage'))) {
-            mkdir(public_path('storage'), 0777, true);
-        }
 
         $this->actingAs($this->employee);
         
         // Create initial product with photo
         $oldFileName = 'old-photo.jpg';
-        $oldFilePath = public_path('storage/' . $oldFileName);
-        file_put_contents($oldFilePath, 'test content');
+        Storage::disk('public')->put($oldFileName, 'test content');
         
         $product = Product::factory()->create([
             'category_id' => $this->category->id,
@@ -145,10 +140,9 @@ class AdminProductControllerTest extends TestCase
         $updatedProduct = $product->fresh();
         $this->assertNotNull($updatedProduct->photo);
         $this->assertNotEquals($oldFileName, $updatedProduct->photo);
-        $this->assertTrue(file_exists(public_path('storage/' . $updatedProduct->photo)));
         
-        // Old file should be deleted
-        $this->assertFalse(file_exists($oldFilePath));
+        $this->assertTrue(Storage::disk('public')->exists($updatedProduct->photo));
+        $this->assertFalse(Storage::disk('public')->exists($oldFileName));
     }
 
     /** @test */

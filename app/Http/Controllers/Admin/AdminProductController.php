@@ -46,12 +46,12 @@ class AdminProductController extends Controller
                 $photo = $request->file('photo');
                 $file_name = $product->name . '-' . time() . '.' . $photo->getClientOriginalExtension();
                 
-                // simpan nama file ke database
+                // Store the file using Storage facade
+                $photo->storeAs('', $file_name, 'public');
+                
+                // Save file name to database
                 $product->photo = $file_name;
                 $product->save();
-
-                // simpan file gambar ke sistem
-                $photo->move(public_path('storage'), $file_name);
             }
 
             return redirect()->back()->with('success', 'Berhasil');
@@ -85,20 +85,20 @@ class AdminProductController extends Controller
             ]);
 
             if ($request->hasFile('photo')) {
-                // Delete old photo if exists
-                if ($oldPhoto && file_exists(public_path('storage/' . $oldPhoto))) {
-                    File::delete(public_path('storage/' . $oldPhoto));
+                // Delete old photo if exists using Storage facade
+                if ($oldPhoto && Storage::disk('public')->exists($oldPhoto)) {
+                    Storage::disk('public')->delete($oldPhoto);
                 }
 
                 $photo = $request->file('photo');
                 $file_name = $product->name . '-' . time() . '.' . $photo->getClientOriginalExtension();
                 
-                // simpan nama file ke database
+                // Store the new file using Storage facade
+                $photo->storeAs('', $file_name, 'public');
+                
+                // Save file name to database
                 $product->photo = $file_name;
                 $product->save();
-
-                // simpan file gambar ke sistem
-                $photo->move(public_path('storage'), $file_name);
             }
 
             return redirect()->back()->with('success', 'Berhasil');
@@ -115,9 +115,9 @@ class AdminProductController extends Controller
         try {
             $product = Product::findOrFail($id);
             
-            // Delete photo if exists
-            if ($product->photo && file_exists(public_path('storage/' . $product->photo))) {
-                File::delete(public_path('storage/' . $product->photo));
+            // Delete photo if exists using Storage facade
+            if ($product->photo && Storage::disk('public')->exists($product->photo)) {
+                Storage::disk('public')->delete($product->photo);
             }
             
             $product->delete();
