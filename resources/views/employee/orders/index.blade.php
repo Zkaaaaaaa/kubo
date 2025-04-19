@@ -33,8 +33,8 @@
                                         <ul class="list-unstyled">
                                             @foreach($order->items as $item)
                                                 <li>
-                                                    {{ $item->product->name }} 
-                                                    ({{ $item->quantity }} x Rp {{ number_format($item->product->price, 0, ',', '.') }})
+                                                    {{ $item->product->name ?? 'Product not found' }} 
+                                                    ({{ $item->quantity ?? 0 }} x Rp {{ number_format($item->product->price ?? 0, 0, ',', '.') }})
                                                 </li>
                                             @endforeach
                                         </ul>
