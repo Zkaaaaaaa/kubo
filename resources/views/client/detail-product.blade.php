@@ -22,7 +22,7 @@
                             @csrf
                             <div class="form-group">
                                 <label for="quantity">Jumlah</label>
-                                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" required>
+                                <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" required onchange="validateQuantity(this)">
                             </div>
                             <div class="form-group">
                                 <label for="notes">Catatan</label>
@@ -35,4 +35,20 @@
             </div>
         </div>
     </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        function validateQuantity(input) {
+            if (input.value > 10) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Jumlah pesanan maksimal 10 porsi',
+                    confirmButtonColor: '#ffc107',
+                    confirmButtonText: 'OK'
+                });
+                input.value = 10;
+            }
+        }
+    </script>
 @endsection

@@ -30,7 +30,7 @@
                         autofocus 
                         autocomplete="username"
                         placeholder="Masukkan email"
-                        class="w-full h-12 px-4 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
+                        class="w-full h-12 px-4 bg-gray-900 text-white border-0 rounded-lg focus:ring-0 placeholder-gray-400 focus:bg-gray-900"
                     />
                     <x-input-error :messages="$errors->get('email')" class="mt-2" />
                 </div>
@@ -44,7 +44,7 @@
                         required 
                         autocomplete="current-password"
                         placeholder="Masukkan Password"
-                        class="w-full h-12 px-4 bg-blue-50/80 border-0 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
+                        class="w-full h-12 px-4 bg-gray-900 text-white border-0 rounded-lg focus:ring-0 placeholder-gray-400 focus:bg-gray-900"
                     />
                     <x-input-error :messages="$errors->get('password')" class="mt-2" />
                 </div>
@@ -89,4 +89,12 @@
             </form>
         </div>
     </div>
+
+    <style>
+        /* Style untuk input saat diisi */
+        input:not(:placeholder-shown) {
+            background-color: rgb(241, 245, 249) !important;
+            color: black !important;
+        }
+    </style>
 </x-guest-layout>

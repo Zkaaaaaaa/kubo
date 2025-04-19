@@ -6,6 +6,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .cart-container {
             max-width: 800px;
@@ -134,6 +135,31 @@
 
     <script type="text/javascript">
         function updateQuantity(cartId, change) {
+            const currentQuantity = parseInt(document.querySelector(`.quantity-control span`).textContent);
+            const newQuantity = currentQuantity + change;
+            
+            if (newQuantity < 1) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Jumlah pesanan minimal 1 porsi',
+                    confirmButtonColor: '#ffc107',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+            
+            if (newQuantity > 10) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Oops...',
+                    text: 'Jumlah pesanan maksimal 10 porsi',
+                    confirmButtonColor: '#ffc107',
+                    confirmButtonText: 'OK'
+                });
+                return;
+            }
+
             fetch(`/cart/update/${cartId}`, {
                 method: 'POST',
                 headers: {
