@@ -7,6 +7,8 @@
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
     </script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
     <style>
         .cart-container {
             max-width: 800px;
@@ -37,8 +39,6 @@
             cursor: pointer;
         }
         .total-section {
-            position: sticky;
-            bottom: 0;
             background: white;
             padding: 20px;
             border-radius: 10px;
@@ -53,11 +53,33 @@
             max-width: 300px;
             margin-bottom: 20px;
         }
+        .btn-warning {
+            transition: all 0.3s ease;
+            border: none;
+            font-size: 0.95rem;
+            background-color: #ffc107;
+            color: #000;
+            border-radius: 8px;
+        }
+        .btn-warning:hover {
+            background-color: #ffca2c;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(255, 193, 7, 0.2);
+        }
+        .btn-warning:active {
+            transform: translateY(0);
+        }
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 15px;
+        }
     </style>
 @endsection
 
 @section('content')
-    <div class="container mb-5 pb-5">
+    <div class="container mb-5">
         <div class="cart-container">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="mb-0"><b>Keranjang Belanja</b></h2>
@@ -74,7 +96,7 @@
                         $productTotal = $cart->product->price * $cart->quantity;
                         $totalPrice += $productTotal;
                     @endphp
-                    <div class="card cart-item mb-3">
+                    <div class="card cart-item mb-3" data-cart-id="{{ $cart->id }}">
                         <div class="card-body">
                             <div class="row align-items-center">
                                 <div class="col-md-3">
@@ -92,12 +114,21 @@
                                         <h5 class="text-warning mb-0">Rp{{ number_format($productTotal, 0, ',', '.') }}</h5>
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center mt-3">
-                                        <div class="quantity-control d-flex align-items-center">
-                                            <button class="btn btn-sm btn-outline-secondary quantity-btn" 
-                                                    onclick="updateQuantity({{ $cart->id }}, -1)">-</button>
-                                            <span class="mx-3">{{ $cart->quantity }}</span>
-                                            <button class="btn btn-sm btn-outline-secondary quantity-btn" 
-                                                    onclick="updateQuantity({{ $cart->id }}, 1)">+</button>
+                                        <div class="d-flex align-items-center">
+                                            <div class="quantity-control d-flex align-items-center me-3">
+                                                <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                        onclick="updateQuantity({{ $cart->id }}, -1)">
+                                                    <i class="fas fa-minus"></i>
+                                                </button>
+                                                <span class="mx-3">{{ $cart->quantity }}</span>
+                                                <button class="btn btn-sm btn-outline-secondary quantity-btn" 
+                                                        onclick="updateQuantity({{ $cart->id }}, 1)">
+                                                    <i class="fas fa-plus"></i>
+                                                </button>
+                                            </div>
+                                            <button class="btn btn-sm btn-outline-danger" onclick="confirmDelete({{ $cart->id }})">
+                                                <i class="fas fa-trash-alt"></i>
+                                            </button>
                                         </div>
                                         <p class="mb-0">Rp{{ number_format($cart->product->price, 0, ',', '.') }}/item</p>
                                     </div>
@@ -125,9 +156,14 @@
                         <h4 class="mb-0">Total Pembayaran</h4>
                         <h4 class="text-warning mb-0">Rp {{ number_format($totalPrice, 0, ',', '.') }}</h4>
                     </div>
-                    <button id="pay-button" class="btn btn-warning w-100 mt-3 py-3">
-                        Lanjutkan Pembayaran
-                    </button>
+                    <div class="button-container">
+                        <a href="{{ route('home') }}" class="btn btn-warning text-center py-3">
+                            Pesan Lagi
+                        </a>
+                        <button id="pay-button" class="btn btn-warning text-center py-3">
+                            Lanjutkan Pembayaran
+                        </button>
+                    </div>
                 </div>
             @endif
         </div>
@@ -135,16 +171,28 @@
 
     <script type="text/javascript">
         function updateQuantity(cartId, change) {
-            const currentQuantity = parseInt(document.querySelector(`.quantity-control span`).textContent);
+            const cartItem = document.querySelector(`[data-cart-id="${cartId}"]`);
+            const quantitySpan = cartItem.querySelector('.quantity-control span');
+            const currentQuantity = parseInt(quantitySpan.textContent);
             const newQuantity = currentQuantity + change;
             
             if (newQuantity < 1) {
                 Swal.fire({
+                    title: 'Hapus Item?',
+                    text: "Apakah Anda yakin ingin menghapus item ini dari keranjang?",
                     icon: 'warning',
-                    title: 'Oops...',
-                    text: 'Jumlah pesanan minimal 1 porsi',
+                    showCancelButton: true,
                     confirmButtonColor: '#ffc107',
-                    confirmButtonText: 'OK'
+                    cancelButtonColor: '#dc3545',
+                    confirmButtonText: 'Ya, hapus!',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        deleteItem(cartId);
+                    } else {
+                        // Reset quantity to 1 if user cancels
+                        quantitySpan.textContent = '1';
+                    }
                 });
                 return;
             }
@@ -171,14 +219,132 @@
                 .then(response => response.json())
                 .then(data => {
                     if (data.success) {
-                        location.reload(); // Refresh halaman untuk memperbarui tampilan keranjang
+                        // Update quantity display
+                        quantitySpan.textContent = newQuantity;
+                        
+                        // Update item total price
+                        const itemPrice = parseInt(cartItem.querySelector('.text-warning').textContent.replace(/[^0-9]/g, ''));
+                        const pricePerItem = itemPrice / currentQuantity;
+                        const newItemTotal = pricePerItem * newQuantity;
+                        cartItem.querySelector('.text-warning').textContent = `Rp${newItemTotal.toLocaleString('id-ID')}`;
+                        
+                        // Update total price
+                        const totalPriceElement = document.querySelector('.total-section h4.text-warning');
+                        const currentTotal = parseInt(totalPriceElement.textContent.replace(/[^0-9]/g, ''));
+                        const totalChange = pricePerItem * change;
+                        totalPriceElement.textContent = `Rp ${(currentTotal + totalChange).toLocaleString('id-ID')}`;
                     } else {
-                        alert(data.message || 'Terjadi kesalahan.');
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: data.message || 'Terjadi kesalahan.',
+                            confirmButtonColor: '#ffc107',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
                 });
+        }
+
+        function confirmDelete(cartId) {
+            Swal.fire({
+                title: 'Hapus Item?',
+                text: "Item ini akan dihapus dari keranjang belanja Anda",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ffc107',
+                cancelButtonColor: '#dc3545',
+                confirmButtonText: 'Ya, hapus!',
+                cancelButtonText: 'Batal',
+                showClass: {
+                    popup: 'animate__animated animate__fadeInDown'
+                },
+                hideClass: {
+                    popup: 'animate__animated animate__fadeOutUp'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    deleteItem(cartId);
+                }
+            });
+        }
+
+        function deleteItem(cartId) {
+            const cartItem = document.querySelector(`[data-cart-id="${cartId}"]`);
+            const itemPrice = parseInt(cartItem.querySelector('.text-warning').textContent.replace(/[^0-9]/g, ''));
+
+            fetch(`/cart/${cartId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                },
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the cart item from DOM
+                    cartItem.remove();
+
+                    // Update item count badge
+                    const itemCount = document.querySelector('.badge');
+                    const currentCount = parseInt(itemCount.textContent);
+                    itemCount.textContent = `${currentCount - 1} Item`;
+
+                    // Update total price
+                    const totalPriceElement = document.querySelector('.total-section h4.text-warning');
+                    const currentTotal = parseInt(totalPriceElement.textContent.replace(/[^0-9]/g, ''));
+                    totalPriceElement.textContent = `Rp ${(currentTotal - itemPrice).toLocaleString('id-ID')}`;
+
+                    // If no items left, show empty cart
+                    if (currentCount - 1 === 0) {
+                        const cartContainer = document.querySelector('.cart-container');
+                        cartContainer.innerHTML = `
+                            <div class="empty-cart">
+                                <img src="{{ asset('storage/nasi_goreng.jpeg') }}" 
+                                     alt="Empty Cart" 
+                                     class="img-fluid rounded">
+                                <h4 class="mt-4">Keranjang Anda kosong!</h4>
+                                <p class="text-muted mb-4">Yuk pesan makanan favoritmu sekarang!</p>
+                                <a href="{{ route('home') }}" class="btn btn-warning btn-lg">Pesan Sekarang</a>
+                            </div>
+                        `;
+                    }
+
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Item berhasil dihapus dari keranjang',
+                        confirmButtonColor: '#ffc107',
+                        confirmButtonText: 'OK',
+                        showClass: {
+                            popup: 'animate__animated animate__fadeInDown'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOutUp'
+                        }
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: data.message || 'Terjadi kesalahan.',
+                        confirmButtonColor: '#ffc107',
+                        confirmButtonText: 'OK',
+                        showClass: {
+                            popup: 'animate__animated animate__fadeInDown'
+                        },
+                        hideClass: {
+                            popup: 'animate__animated animate__fadeOutUp'
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
         }
 
         var payButton = document.getElementById('pay-button');

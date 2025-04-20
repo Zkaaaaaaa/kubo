@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light container">
     <a class="navbar-brand" href="{{ route('home') }}">
-        <img class="img img-fluid" width="50px" src="{{ asset('assets/dist/img/AdminLTELogo.png') }}" alt="">
+        <img class="img img-fluid" width="50px" src="{{ asset('assets/dist/img/logokubo.jpg') }}" alt="">
          <span class="font-weight-bold ml-1">Kubo Kopi</span>
     </a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
