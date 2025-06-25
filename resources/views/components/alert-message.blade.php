@@ -1,14 +1,25 @@
 @if ($errors->any())
-    <div class="alert alert-danger">
-        <ul>
-            @foreach ($errors->all() as $error)
-                <li>{{ $error }}</li>
-            @endforeach
-        </ul>
-    </div>
-@endif
-@if (session('success'))
-    <div class="alert alert-success" role="alert">
-        {{ session('success') }}
-    </div>
-@endif
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  html: `{!! implode('<br>', $errors->all()) !!}`,
+                  confirmButtonColor: '#d33',
+              });
+          });
+      </script>
+  @endif
+
+  @if (session('success'))
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Berhasil!',
+                  text: '{{ session('success') }}',
+                  confirmButtonColor: '#28a745',
+              });
+          });
+      </script>
+  @endif

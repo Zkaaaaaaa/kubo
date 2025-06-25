@@ -27,6 +27,7 @@
   <link rel="stylesheet" href="{{ asset('assets/plugins/datatables-bs4/css/dataTables.bootstrap4.css') }}">
   <!-- Google Font: Source Sans Pro -->
   <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 <div class="wrapper">
@@ -34,31 +35,6 @@
   @include('layouts.admin.navbar')
 
   @include('layouts.admin.sidebar')
-  @if ($errors->any())
-      <script>
-          document.addEventListener('DOMContentLoaded', function() {
-              Swal.fire({
-                  icon: 'error',
-                  title: 'Oops...',
-                  html: `{!! implode('<br>', $errors->all()) !!}`,
-                  confirmButtonColor: '#d33',
-              });
-          });
-      </script>
-  @endif
-
-  @if (session('success'))
-      <script>
-          document.addEventListener('DOMContentLoaded', function() {
-              Swal.fire({
-                  icon: 'success',
-                  title: 'Berhasil!',
-                  text: '{{ session('success') }}',
-                  confirmButtonColor: '#28a745',
-              });
-          });
-      </script>
-  @endif
 
   <!-- Content Wrapper. Contains page content -->
   <div class="content-wrapper">
