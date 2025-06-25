@@ -20,7 +20,7 @@
                             @include('components.alert-message')
 
                             {{-- Filter by Date Range --}}
-                            <form method="GET" action="{{ route('admin.history.index') }}" class="row g-3 mb-3">
+                            <form method="GET" action="{{ route('employee.history.index') }}" class="row g-3 mb-3">
                                 <div class="col-md-3">
                                     <label for="start_date" class="form-label">Start Date</label>
                                     <input type="date" id="start_date" name="start_date" class="form-control"
@@ -33,7 +33,7 @@
                                 </div>
                                 <div class="col-md-3 align-self-end">
                                     <button type="submit" class="btn btn-primary">Filter</button>
-                                    <a href="{{ route('admin.history.index') }}" class="btn btn-secondary">Reset</a>
+                                    <a href="{{ route('employee.history.index') }}" class="btn btn-secondary">Reset</a>
                                 </div>
                             </form>
 
