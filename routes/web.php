@@ -12,16 +12,16 @@ use App\Http\Middleware\Admin;
 use App\Http\Middleware\Customer;
 use App\Http\Middleware\Employee;
 use App\Http\Controllers\Employee\OrderController;
-use App\Http\Controllers\NotificationController;
+use App\Http\Controllers\Employee\NotificationController;
 use Illuminate\Support\Facades\Route;
 // ADMIN Routes
-Route::middleware(['auth', Admin::class])->name('admin.')->prefix('admin')->group(function () {
+Route::middleware(['auth', 'verified', Admin::class])->name('admin.')->prefix('admin')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('user', AdminUserController::class)->except(['show']);
 });
 
 // EMPLOYEE Routes
-Route::middleware(['auth', Employee::class])->name('employee.')->prefix('employee')->group(function () {
+Route::middleware(['auth', 'verified', Employee::class])->name('employee.')->prefix('employee')->group(function () {
     Route::get('/dashboard', [AdminDashboardController::class, 'index'])->name('dashboard');
     Route::resource('category', AdminCategoryController::class)->except(['show']);
     Route::resource('product', AdminProductController::class)->except(['show']);
@@ -37,11 +37,11 @@ Route::middleware(['auth', Employee::class])->name('employee.')->prefix('employe
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead'])->name('notifications.markAsRead');
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
-    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.unreadCount');
+    Route::get('/notifications/unread-count', [NotificationController::class, 'getUnreadCount'])->name('notifications.getUnreadCount');
 });
 
 // CLIENT Routes
-Route::middleware(['auth', Customer::class])->group(function () {
+Route::middleware(['auth', 'verified', Customer::class])->group(function () {
     Route::get('/', [HomepageController::class, 'index'])->name('home');
     Route::get('/detail-product/{id}', [HomepageController::class, 'detailProduct'])->name('detail-product');
     Route::get('/category/{id}', [HomepageController::class, 'category'])->name('category');
@@ -55,7 +55,7 @@ Route::middleware(['auth', Customer::class])->group(function () {
     Route::get('/order-detail/{id}', [HomepageController::class, 'orderDetail'])->name('order-detail');
 });
 
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     // Profile Management
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
@@ -63,7 +63,7 @@ Route::middleware('auth')->group(function () {
 });
 
 // Notification routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/{id}/mark-as-read', [NotificationController::class, 'markAsRead']);
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead']);
