@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Promo;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AdminPromoController extends Controller
 {
@@ -31,8 +32,8 @@ class AdminPromoController extends Controller
              $promo->photo_1 = $file_name;
              $promo->update();
  
-             // simpan file gambar ke sistem
-             $photo_1->move(public_path('storage'), $file_name);
+             // simpan file gambar ke storage
+             $photo_1->storeAs('public', $file_name);
         }
 
         if ($request->hasFile('photo_2')) {
@@ -42,8 +43,8 @@ class AdminPromoController extends Controller
              $promo->photo_2 = $file_name;
              $promo->update();
  
-             // simpan file gambar ke sistem
-             $photo_2->move(public_path('storage'), $file_name);
+             // simpan file gambar ke storage
+             $photo_2->storeAs('public', $file_name);
         }
 
         if ($request->hasFile('photo_3')) {
@@ -53,8 +54,8 @@ class AdminPromoController extends Controller
              $promo->photo_3 = $file_name;
              $promo->update();
  
-             // simpan file gambar ke sistem
-             $photo_3->move(public_path('storage'), $file_name);
+             // simpan file gambar ke storage
+             $photo_3->storeAs('public', $file_name);
         }
 
         return redirect()->back()->with('success', 'Promo updated successfully.');

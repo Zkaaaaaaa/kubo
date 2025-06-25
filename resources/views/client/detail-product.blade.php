@@ -28,7 +28,7 @@
                                 <label for="notes">Catatan</label>
                                 <textarea class="form-control" id="notes" name="notes" rows="3" placeholder="Tambahkan catatan untuk pesanan Anda (opsional)"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-warning">Tambah ke Keranjang</button>
+                            <button type="submit" class="btn btn-warning">Tambah     ke Pesanan</button>
                         </form>
                     </div>
                 </div>

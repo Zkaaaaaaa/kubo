@@ -3,22 +3,27 @@
 @section('title', 'History')
 
 @section('content')
-    <!-- Main content -->
+    <!-- Bagian konten utama -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-12">
+                    <!-- Container card untuk tabel history -->
                     <div class="card shadow-sm">
+                        <!-- Header card dengan judul dan tombol export -->
                         <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
                             <h3 class="card-title mb-0">Order History</h3>
                             <div id="table-buttons"></div>
                         </div>
                         <div class="card-body">
+                            <!-- Komponen pesan alert untuk notifikasi -->
                             @include('components.alert-message')
 
-                            <!-- Tabel -->
+                            <!-- Container tabel responsif -->
                             <div class="table-responsive">
+                                <!-- Tabel history utama dengan inisialisasi DataTables -->
                                 <table id="historyTable" class="table table-bordered table-striped table-hover">
+                                    <!-- Header tabel dengan nama kolom -->
                                     <thead class="bg-secondary text-white">
                                         <tr>
                                             <th>No</th>
@@ -31,11 +36,14 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        <!-- Inisialisasi penghitung total -->
                                         @php
                                             $totalQuantity = 0;
                                             $totalAmount = 0;
                                         @endphp
+                                        <!-- Perulangan untuk setiap record history -->
                                         @foreach ($histories as $history)
+                                            <!-- Akumulasi total -->
                                             @php
                                                 $totalQuantity += $history['quantity'];
                                                 $totalAmount += $history['total'];
@@ -48,19 +56,23 @@
                                                 <td>{{ $history['quantity'] ?? '-' }}</td>
                                                 <td>Rp {{ number_format($history['total'], 0, ',', '.') }}</td>
                                                 <td>
+                                                    <!-- Konfigurasi badge status -->
                                                     @php
+                                                        // Mendefinisikan kelas untuk setiap status
                                                         $statusClasses = [
                                                             'cart' => 'badge-warning',
                                                             'process' => 'badge-primary',
                                                             'done' => 'badge-success',
                                                             'default' => 'badge-danger'
                                                         ];
+                                                        // Mendefinisikan label untuk setiap status
                                                         $statusLabels = [
                                                             'cart' => 'Cart',
                                                             'process' => 'Process',
                                                             'done' => 'Done',
                                                             'default' => 'No Status'
                                                         ];
+                                                        // Mendapatkan kelas dan label yang sesuai berdasarkan status
                                                         $statusClass = $statusClasses[$history['status'] ?? 'default'];
                                                         $statusLabel = $statusLabels[$history['status'] ?? 'default'];
                                                     @endphp
@@ -69,6 +81,7 @@
                                             </tr>
                                         @endforeach
                                     </tbody>
+                                    <!-- Footer tabel dengan total -->
                                     <tfoot class="bg-light">
                                         <tr>
                                             <td colspan="4" class="text-end fw-bold">Total:</td>
@@ -90,12 +103,14 @@
 @section('script')
     <script>
         $(document).ready(function () {
+            // Inisialisasi DataTable dengan konfigurasi
             const table = $("#historyTable").DataTable({
                 responsive: true,
                 lengthChange: true,
                 autoWidth: false,
                 paging: true,
                 dom: 'Bfrtip',
+                // Konfigurasi tombol export
                 buttons: [
                     {
                         extend: 'excelHtml5',
@@ -114,6 +129,7 @@
                         exportOptions: {
                             columns: ':visible'
                         },
+                        // Kustomisasi PDF
                         customize: function (doc) {
                             doc.content[1].table.widths = 
                                 Array(doc.content[1].table.body[0].length + 1).join('*').split('');
@@ -137,6 +153,7 @@
                         exportOptions: {
                             columns: ':visible'
                         },
+                        // Kustomisasi print
                         customize: function(win) {
                             $(win.document.body).find('table tfoot tr')
                                 .css('background-color', '#f8f9fa')
@@ -144,23 +161,24 @@
                         }
                     }
                 ],
+                // Konfigurasi bahasa untuk pencarian
                 language: {
                     search: "_INPUT_",
                     searchPlaceholder: "Search...",
                 },
+                // Callback footer untuk perhitungan total dinamis
                 footerCallback: function (row, data, start, end, display) {
                     var api = this.api();
                     
-                    // Remove the formatting to get integer data for summation
+                    // Fungsi pembantu untuk mengkonversi nilai string ke integer
                     var intVal = function (i) {
                         if (typeof i === 'string') {
-                            // Remove 'Rp', dots, and any other non-numeric characters
                             return parseInt(i.replace(/[^\d]/g, '')) || 0;
                         }
                         return typeof i === 'number' ? i : 0;
                     };
 
-                    // Calculate total quantity
+                    // Menghitung total kuantitas untuk halaman saat ini
                     var totalQty = api
                         .column(4, { page: 'current' })
                         .data()
@@ -168,7 +186,7 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                    // Calculate total amount
+                    // Menghitung total jumlah untuk halaman saat ini
                     var totalAmount = api
                         .column(5, { page: 'current' })
                         .data()
@@ -176,17 +194,18 @@
                             return intVal(a) + intVal(b);
                         }, 0);
 
-                    // Update footer cells
+                    // Memperbarui sel footer dengan total yang dihitung
                     $(api.column(4).footer()).html(totalQty);
                     $(api.column(5).footer()).html('Rp ' + totalAmount.toLocaleString('id-ID'));
                 }
             });
 
+            // Menambahkan tombol ke container yang ditentukan
             table.buttons().container().appendTo('#table-buttons');
         });
     </script>
 
-    <!-- DataTables -->
+    <!-- Library DataTables dan library terkait yang diperlukan -->
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.5/js/dataTables.bootstrap5.min.js"></script>
     <script src="https://cdn.datatables.net/responsive/2.4.1/js/dataTables.responsive.min.js"></script>
