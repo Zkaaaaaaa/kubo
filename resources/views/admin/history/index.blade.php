@@ -50,7 +50,6 @@
                                             <th>Name</th>
                                             <th>Quantity</th>
                                             <th>Total</th>
-                                            <th>Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -73,38 +72,15 @@
                                                 <td>{{ $history['user_id'] ?? '-' }}</td>
                                                 <td>{{ $history['quantity'] ?? '-' }}</td>
                                                 <td>Rp {{ number_format($history['total'], 0, ',', '.') }}</td>
-                                                <td>
-                                                    <!-- Konfigurasi badge status -->
-                                                    @php
-                                                        // Mendefinisikan kelas untuk setiap status
-                                                        $statusClasses = [
-                                                            'cart' => 'badge-warning',
-                                                            'process' => 'badge-primary',
-                                                            'done' => 'badge-success',
-                                                            'default' => 'badge-danger',
-                                                        ];
-                                                        // Mendefinisikan label untuk setiap status
-                                                        $statusLabels = [
-                                                            'cart' => 'Cart',
-                                                            'process' => 'Process',
-                                                            'done' => 'Done',
-                                                            'default' => 'No Status',
-                                                        ];
-                                                        // Mendapatkan kelas dan label yang sesuai berdasarkan status
-                                                        $statusClass = $statusClasses[$history['status'] ?? 'default'];
-                                                        $statusLabel = $statusLabels[$history['status'] ?? 'default'];
-                                                    @endphp
-                                                    <span class="badge {{ $statusClass }}">{{ $statusLabel }}</span>
-                                                </td>
                                             </tr>
                                         @endforeach
                                     </tbody>
                                     <!-- Footer tabel dengan total -->
                                     <tfoot class="bg-light">
                                         <tr>
-                                            <td colspan="4" class="text-end fw-bold">Total:</td>
-                                            <td class="fw-bold">{{ $totalQuantity }}</td>
-                                            <td class="fw-bold">Rp {{ number_format($totalAmount, 0, ',', '.') }}</td>
+                                            <td colspan="3" class="text-end fw-bold">Total:</td>
+                                            <td class="fw-bold"><b>{{ $totalQuantity }}</b></td>
+                                            <td class="fw-bold"><b>Rp {{ number_format($totalAmount, 0, ',', '.') }}</b></td>
                                             <td></td>
                                         </tr>
                                     </tfoot>

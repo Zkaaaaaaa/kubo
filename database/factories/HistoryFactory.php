@@ -17,11 +17,12 @@ class HistoryFactory extends Factory
     public function definition(): array
     {
         return [
-            'date' => fake()->date(),
+
+            'date' => fake()->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
             'product_id' => fake()->numberBetween(1, 100),
             'note' => fake()->name(),
             'quantity' => fake()->numberBetween(1, 100),
-            'total' => fake()->randomFloat(2,10,1000),
+            'total' => fake()->randomFloat(2, 10, 1000),
             'table' => fake()->numberBetween(1, 100),
             'status' => fake()->randomElement(['cart', 'process', 'done']),
             'user_id' => fake()->numberBetween(1, 10),
