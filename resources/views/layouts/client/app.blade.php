@@ -40,9 +40,6 @@
 
   @include('layouts.client.footer')
 
-    
-
-
 <!-- jQuery -->
 <script src="{{ asset('assets/plugins/jquery/jquery.min.js') }}"></script>
 <!-- jQuery UI 1.11.4 -->

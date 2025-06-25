@@ -3,6 +3,7 @@
 @section('title', 'Dashboard')
 
 @section('content')
+@include('components.alert-message')
 @if(auth()->user()->role == 'admin')
     <!-- Main content -->
     <section class="content">
