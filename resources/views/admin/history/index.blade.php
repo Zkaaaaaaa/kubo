@@ -19,6 +19,24 @@
                             <!-- Komponen pesan alert untuk notifikasi -->
                             @include('components.alert-message')
 
+                            {{-- Filter by Date Range --}}
+                            <form method="GET" action="{{ route('admin.history.index') }}" class="row g-3 mb-3">
+                                <div class="col-md-3">
+                                    <label for="start_date" class="form-label">Start Date</label>
+                                    <input type="date" id="start_date" name="start_date" class="form-control"
+                                        value="{{ request('start_date') }}">
+                                </div>
+                                <div class="col-md-3">
+                                    <label for="end_date" class="form-label">End Date</label>
+                                    <input type="date" id="end_date" name="end_date" class="form-control"
+                                        value="{{ request('end_date') }}">
+                                </div>
+                                <div class="col-md-3 align-self-end">
+                                    <button type="submit" class="btn btn-primary">Filter</button>
+                                    <a href="{{ route('admin.history.index') }}" class="btn btn-secondary">Reset</a>
+                                </div>
+                            </form>
+
                             <!-- Container tabel responsif -->
                             <div class="table-responsive">
                                 <!-- Tabel history utama dengan inisialisasi DataTables -->
@@ -63,14 +81,14 @@
                                                             'cart' => 'badge-warning',
                                                             'process' => 'badge-primary',
                                                             'done' => 'badge-success',
-                                                            'default' => 'badge-danger'
+                                                            'default' => 'badge-danger',
                                                         ];
                                                         // Mendefinisikan label untuk setiap status
                                                         $statusLabels = [
                                                             'cart' => 'Cart',
                                                             'process' => 'Process',
                                                             'done' => 'Done',
-                                                            'default' => 'No Status'
+                                                            'default' => 'No Status',
                                                         ];
                                                         // Mendapatkan kelas dan label yang sesuai berdasarkan status
                                                         $statusClass = $statusClasses[$history['status'] ?? 'default'];
@@ -102,7 +120,7 @@
 
 @section('script')
     <script>
-        $(document).ready(function () {
+        $(document).ready(function() {
             // Inisialisasi DataTable dengan konfigurasi
             const table = $("#historyTable").DataTable({
                 responsive: true,
@@ -111,8 +129,7 @@
                 paging: true,
                 dom: 'Bfrtip',
                 // Konfigurasi tombol export
-                buttons: [
-                    {
+                buttons: [{
                         extend: 'excelHtml5',
                         text: '<i class="fas fa-file-excel"></i> Excel',
                         className: 'btn btn-success btn-sm',
@@ -130,8 +147,8 @@
                             columns: ':visible'
                         },
                         // Kustomisasi PDF
-                        customize: function (doc) {
-                            doc.content[1].table.widths = 
+                        customize: function(doc) {
+                            doc.content[1].table.widths =
                                 Array(doc.content[1].table.body[0].length + 1).join('*').split('');
                             doc.styles.tableHeader = {
                                 fillColor: '#343a40',
@@ -167,11 +184,11 @@
                     searchPlaceholder: "Search...",
                 },
                 // Callback footer untuk perhitungan total dinamis
-                footerCallback: function (row, data, start, end, display) {
+                footerCallback: function(row, data, start, end, display) {
                     var api = this.api();
-                    
+
                     // Fungsi pembantu untuk mengkonversi nilai string ke integer
-                    var intVal = function (i) {
+                    var intVal = function(i) {
                         if (typeof i === 'string') {
                             return parseInt(i.replace(/[^\d]/g, '')) || 0;
                         }
@@ -180,17 +197,21 @@
 
                     // Menghitung total kuantitas untuk halaman saat ini
                     var totalQty = api
-                        .column(4, { page: 'current' })
+                        .column(4, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce(function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
 
                     // Menghitung total jumlah untuk halaman saat ini
                     var totalAmount = api
-                        .column(5, { page: 'current' })
+                        .column(5, {
+                            page: 'current'
+                        })
                         .data()
-                        .reduce(function (a, b) {
+                        .reduce(function(a, b) {
                             return intVal(a) + intVal(b);
                         }, 0);
 

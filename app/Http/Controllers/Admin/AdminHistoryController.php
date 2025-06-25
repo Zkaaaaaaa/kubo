@@ -11,9 +11,16 @@ class AdminHistoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $histories = History::where('status', 'done')->get();
+        $query = History::where('status', 'done');
+
+        // Filter berdasarkan tanggal jika tersedia
+        if ($request->has(['start_date', 'end_date']) && $request->start_date && $request->end_date) {
+            $query->whereBetween('date', [$request->start_date, $request->end_date]);
+        }
+
+        $histories = $query->get();
 
         // Gabungkan data berdasarkan token yang sama
         $mergedHistories = $histories->groupBy('token')->map(function ($group) {
@@ -22,15 +29,18 @@ class AdminHistoryController extends Controller
                 'date' => $group->first()->date,
                 'product_id' => $group->first()->product_id,
                 'note' => $group->first()->note,
-                'total' => $group->sum('total'), // Jumlahkan total
-                'quantity' => $group->sum('quantity'), // Jumlahkan quantity
+                'total' => $group->sum('total'),
+                'quantity' => $group->sum('quantity'),
                 'status' => $group->first()->status,
                 'table' => $group->first()->table,
                 'user_id' => $group->first()->user->name,
             ];
         });
 
-        // Kirimkan data yang sudah digabung ke view
-        return view('admin.history.index', ['histories' => $mergedHistories]);
+        return view('admin.history.index', [
+            'histories' => $mergedHistories,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date
+        ]);
     }
 }
