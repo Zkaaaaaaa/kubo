@@ -32,6 +32,31 @@
 <body class="hold-transition sidebar-mini layout-fixed" style="background-color: #eeeeee;">
 
 
+  @if ($errors->any())
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              Swal.fire({
+                  icon: 'error',
+                  title: 'Oops...',
+                  html: `{!! implode('<br>', $errors->all()) !!}`,
+                  confirmButtonColor: '#d33',
+              });
+          });
+      </script>
+  @endif
+
+  @if (session('success'))
+      <script>
+          document.addEventListener('DOMContentLoaded', function() {
+              Swal.fire({
+                  icon: 'success',
+                  title: 'Berhasil!',
+                  text: '{{ session('success') }}',
+                  confirmButtonColor: '#28a745',
+              });
+          });
+      </script>
+  @endif
 
   @include('layouts.client.header')
 
