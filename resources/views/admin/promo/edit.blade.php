@@ -3,6 +3,7 @@
 @section('title', 'Promo')
 
 @section('content')
+@include('components.alert-message')
 
 <form action="{{ route('employee.promo.update') }}" method="POST" enctype="multipart/form-data">
     @csrf
