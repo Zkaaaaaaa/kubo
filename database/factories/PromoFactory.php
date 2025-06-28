@@ -17,9 +17,9 @@ class PromoFactory extends Factory
     public function definition(): array
     {
         return [
-            'photo_1' => "nasi_goreng.jpeg",
-            'photo_2' => "nasi_goreng.jpeg",
-            'photo_3' => "nasi_goreng.jpeg",
+            'photo_1' => "nasi_goreng_1.jpeg",
+            'photo_2' => "nasi_goreng_2.jpeg",
+            'photo_3' => "mie_goreng_1.jpeg",
         ];
     }
 }

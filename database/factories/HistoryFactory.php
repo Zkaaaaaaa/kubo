@@ -18,7 +18,7 @@ class HistoryFactory extends Factory
     {
         return [
 
-            'date' => fake()->dateTimeBetween('-1 month', '+1 month')->format('Y-m-d'),
+            'date' => fake()->dateTimeBetween('-6 months', 'now')->format('Y-m-d'),
             'product_id' => fake()->numberBetween(1, 100),
             'note' => fake()->name(),
             'quantity' => fake()->numberBetween(1, 100),

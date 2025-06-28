@@ -38,7 +38,7 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
         ]);
 
-        // Buat 20 pengguna menggunakan factory
-        User::factory(20)->create();
+        // Buat 20 dummy
+        // User::factory(20)->create();
     }
 }
