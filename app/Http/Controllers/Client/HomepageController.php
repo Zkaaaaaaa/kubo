@@ -152,9 +152,6 @@ class HomepageController extends Controller
     // midtrans
     public function finish(Request $request)
     {
-        $request->validate([
-            'quantity' => 'required|numeric|min:1|max:10',
-        ]);
         $categories = Category::all();
         $request->validate([
             'result_data' => 'required',
