@@ -55,6 +55,9 @@ class HomepageController extends Controller
     // add to cart
     public function cartStore(Request $request, $id)
     {
+        $request->validate([
+           'quantity' => 'required|numeric|min:1|max:10',
+        ]);
         $product = Product::find($id);
         $note = $request->note;
         $quantity = $request->quantity;
@@ -76,6 +79,9 @@ class HomepageController extends Controller
     // update jumlah item
     public function updateQuantity(Request $request, $id)
     {
+        $request->validate([
+            'change' => 'required|numeric|min:1|max:10',
+        ]);
         $cart = History::find($id);
         if (!$cart) {
             return response()->json(['success' => false, 'message' => 'Keranjang tidak ditemukan.']);
@@ -135,6 +141,9 @@ class HomepageController extends Controller
     // midtrans
     public function finish(Request $request)
     {
+        $request->validate([
+           'quantity' => 'required|numeric|min:1|max:10',
+        ]);
         $categories = Category::all();
         $request->validate([
             'result_data' => 'required',
