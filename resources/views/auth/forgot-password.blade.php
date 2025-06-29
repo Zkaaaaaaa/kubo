@@ -1,15 +1,7 @@
 <x-guest-layout>
-    <!-- Logo and Brand -->
-    <div class="mb-8 text-center">
-        <div class="mb-4">
-            <svg class="w-24 h-24 mx-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <!-- Simplified angel with crown icon - you can replace this with your actual logo -->
-                <path d="M50 10 L60 25 L40 25 Z" stroke="black" stroke-width="1" fill="none"/>
-                <path d="M30 35 Q50 20 70 35" stroke="black" stroke-width="1" fill="none"/>
-            </svg>
-        </div>
-        <h1 class="text-2xl font-medium tracking-wider">Kubo Kopi</h1>
-    </div>
+    <h3 class="text-2xl font-bold mb-3 flex items-center justify-center"><span><img width="40px" class="me-2"
+                src="{{ asset('logo.jpeg') }}" alt=""></span>{{ __('KUBO KOPI') }}</h3>
+    <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <div class="mb-6 text-center">
         <h2 class="text-lg font-medium text-gray-600">Lupa Password?</h2>
@@ -26,16 +18,9 @@
 
         <!-- Email Address -->
         <div>
-            <x-text-input 
-                id="email" 
-                type="email" 
-                name="email" 
-                :value="old('email')" 
-                required 
-                autofocus
-                placeholder="Masukkan email"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0 focus:border-gray-400 placeholder-gray-500"
-            />
+            <input id="email" type="email" name="email" required autocomplete="current-email"
+                placeholder="Masukkan Email"
+                class="w-full h-12 px-4 pr-12 border border-gray-300 rounded-lg focus:ring-0 placeholder-gray-400" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
