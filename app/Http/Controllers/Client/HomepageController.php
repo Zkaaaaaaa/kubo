@@ -56,7 +56,7 @@ class HomepageController extends Controller
     public function cartStore(Request $request, $id)
     {
         $request->validate([
-           'quantity' => 'required|numeric|min:1|max:10',
+            'quantity' => 'required|numeric|min:1|max:10',
         ]);
         $product = Product::find($id);
         $note = $request->note;
@@ -80,10 +80,11 @@ class HomepageController extends Controller
     public function updateQuantity(Request $request, $id)
     {
         $request->validate([
-            'change' => 'required|numeric|min:1|max:10',
+            'change' => 'required|integer|between:-10,10',
         ]);
+
         $cart = History::find($id);
-        if (!$cart) {
+        if (!$cart || $cart->user_id !== Auth::id()) {
             return response()->json(['success' => false, 'message' => 'Keranjang tidak ditemukan.']);
         }
 
@@ -91,14 +92,24 @@ class HomepageController extends Controller
 
         if ($newQuantity < 1) {
             $cart->delete(); // Hapus item jika jumlah kurang dari 1
-            return response()->json(['success' => true]);
+            return response()->json(['success' => true, 'deleted' => true]);
+        }
+
+        if ($newQuantity > 10) {
+            return response()->json(['success' => false, 'message' => 'Jumlah maksimal 10 porsi per item.']);
         }
 
         $cart->quantity = $newQuantity;
+        $cart->total = $cart->product->price * $newQuantity; // Update total juga
         $cart->save();
 
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'quantity' => $cart->quantity,
+            'total' => $cart->total
+        ]);
     }
+
 
     // cart
     public function cart()
@@ -142,7 +153,7 @@ class HomepageController extends Controller
     public function finish(Request $request)
     {
         $request->validate([
-           'quantity' => 'required|numeric|min:1|max:10',
+            'quantity' => 'required|numeric|min:1|max:10',
         ]);
         $categories = Category::all();
         $request->validate([
@@ -193,7 +204,7 @@ class HomepageController extends Controller
                     'created_at' => $group->first()->created_at
                 ];
             });
-            
+
         return view('client.my-orders', compact('orders', 'categories'));
     }
 
@@ -201,12 +212,12 @@ class HomepageController extends Controller
     {
         $categories = Category::all();
         $order = History::with('product')->findOrFail($id);
-        
+
         // Get all items with the same token
         $orderItems = History::where('token', $order->token)
             ->with('product')
             ->get();
-            
+
         return view('client.order-detail', compact('order', 'orderItems', 'categories'));
     }
 
