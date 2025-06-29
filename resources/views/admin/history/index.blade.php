@@ -78,10 +78,9 @@
                                     <!-- Footer tabel dengan total -->
                                     <tfoot class="bg-light">
                                         <tr>
-                                            <td colspan="3" class="text-end fw-bold">Total:</td>
-                                            <td class="fw-bold"><b>{{ $totalQuantity }}</b></td>
-                                            <td class="fw-bold"><b>Rp {{ number_format($totalAmount, 0, ',', '.') }}</b></td>
-                                            <td></td>
+                                            <td colspan="4" class="text-end fw-bold">Total:</td>
+                                            <td>{{ $totalQuantity }}</td>
+                                            <td>Rp {{ number_format($totalAmount, 0, ',', '.') }}</td>
                                         </tr>
                                     </tfoot>
                                 </table>
@@ -192,8 +191,8 @@
                         }, 0);
 
                     // Memperbarui sel footer dengan total yang dihitung
-                    $(api.column(4).footer()).html(totalQty);
-                    $(api.column(5).footer()).html('Rp ' + totalAmount.toLocaleString('id-ID'));
+                    $(api.column(4).footer()).html('<strong>' + totalQty+'</strong>');
+                    $(api.column(5).footer()).html('<strong>Rp ' + totalAmount.toLocaleString('id-ID')+'</strong>');
                 }
             });
 

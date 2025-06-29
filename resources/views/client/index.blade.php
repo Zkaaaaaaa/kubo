@@ -5,10 +5,15 @@
 @section('style')
     <style>
         .hero-section {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-            padding: 1.5rem 0;
-            border-radius: 10px;
-            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #dfe9f3 0%, #ffffff 100%);
+            padding: 2.5rem 2rem;
+            border-radius: 1rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255, 255, 255, 0.4);
         }
 
         .carousel-item img {
@@ -116,7 +121,7 @@
             .carousel-item img {
                 height: 250px;
             }
-            
+
             .product-card img {
                 height: 160px;
             }
@@ -126,27 +131,27 @@
             .hero-section {
                 padding: 1rem 0;
             }
-            
+
             .carousel-item img {
                 height: 200px;
             }
-            
+
             .product-card img {
                 height: 140px;
             }
-            
+
             .product-card .card-body {
                 padding: 0.75rem;
             }
-            
+
             .product-card .card-title {
                 font-size: 0.9rem;
             }
-            
+
             .product-card .card-text {
                 font-size: 1rem;
             }
-            
+
             .nav-tabs .nav-link {
                 padding: 0.4rem 0.75rem;
                 font-size: 0.85rem;
@@ -157,15 +162,15 @@
             .carousel-item img {
                 height: 150px;
             }
-            
+
             .product-card img {
                 height: 120px;
             }
-            
+
             .product-card .card-body {
                 padding: 0.5rem;
             }
-            
+
             .product-card .btn {
                 padding: 0.4rem;
                 font-size: 0.8rem;
@@ -181,9 +186,12 @@
             <div class="container">
                 <div class="row align-items-center">
                     <div class="col-md-8">
-                        <h1 class="display-4 mb-2"><b>Selamat Datang!</b></h1>
+                        <h2 style="position: relative; z-index: 1;" class="text-2xl font-bold text-gray-800">Selamat Datang di
+                            Kubo Kopi!</h2>
                         <h3 class="mb-0"><b>{{ Auth::user()->name }}</b></h3>
-                        <p class="lead mt-1">Temukan berbagai produk berkualitas dengan harga terbaik</p>
+                        <p style="position: relative; z-index: 1;" class="text-gray-600 mt-2">
+                            Nikmati pengalaman ngopi yang beda – dengan aroma, rasa, dan suasana yang bikin betah.
+                        </p>
                     </div>
                 </div>
             </div>
@@ -224,7 +232,7 @@
         @include('client.components.search-input')
 
         {{-- PRODUCT CATEGORIES --}}
-        <div class="col-12 mt-3">    
+        <div class="col-12 mt-3">
             <div class="card card-tabs">
                 <div class="card-header p-0 pt-1">
                     <div class="overflow-hidden">
@@ -261,7 +269,8 @@
                                                     <h5 class="card-title">{{ $product->name }}</h5>
                                                     <p class="card-text">RP.{{ number_format($product->price) }}</p>
                                                 </div>
-                                                <a href="{{ route('detail-product', $product->id) }}" class="btn btn-warning">Tambah ke Keranjang</a>
+                                                <a href="{{ route('detail-product', $product->id) }}"
+                                                    class="btn btn-warning">Tambah ke Keranjang</a>
                                             </div>
                                         </div>
                                     @endforeach
@@ -270,7 +279,7 @@
                         @endforeach
                     </div>
                 </div>
-            </div>             
+            </div>
         </div>
     </div>
 @endsection

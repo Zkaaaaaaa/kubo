@@ -1,13 +1,17 @@
 <x-guest-layout>
-    <h3 class="text-lg font-bold mb-3 flex items-center"><span><img width="40px" class="me-2"
-                src="{{ asset('logo.jpeg') }}" alt=""></span>{{ __('Verify Your Email Address') }}</h3>
+    <h3 class="text-lg font-bold mb-3 flex items-center">
+        <span><img width="40px" class="me-2" src="{{ asset('logo.jpeg') }}" alt=""></span>
+        Verifikasi Alamat Email Kamu
+    </h3>
     <div class="mb-4 text-sm text-gray-600 dark:text-gray-400">
-        {{ __('Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn\'t receive the email, we will gladly send you another.') }}
+        Terima kasih sudah mendaftar! Sebelum mulai, yuk cek email kamu dan klik link verifikasi yang baru aja kami
+        kirim.
+        Belum dapat emailnya? Tenang, kami bisa kirim ulang kok!
     </div>
 
     @if (session('status') == 'verification-link-sent')
         <div class="mb-4 font-medium text-sm text-green-600 dark:text-green-400">
-            {{ __('A new verification link has been sent to the email address you provided during registration.') }}
+            Link verifikasi baru sudah kami kirim ke email yang kamu daftarkan. Cek inbox (atau folder spam) ya!
         </div>
     @endif
 
@@ -17,7 +21,7 @@
 
             <div>
                 <x-primary-button>
-                    {{ __('Resend Verification Email') }}
+                    {{ __('Kirim Ulang Link Verifikasi') }}
                 </x-primary-button>
             </div>
         </form>
