@@ -257,43 +257,68 @@
             });
         }
 
-        function deleteItem(cartId) {
-            const cartItem = document.querySelector(`[data-cart-id="${cartId}"]`);
-            fetch(`/cart/${cartId}`, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                    },
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        cartItem.remove();
-                        updateCartSummary();
-                        checkIfCartIsEmpty();
+       function deleteItem(cartId) {
+    const cartItem = document.querySelector(`[data-cart-id="${cartId}"]`);
+    const itemTotalText = cartItem.querySelector('.text-warning');
+    const itemTotal = parseInt(itemTotalText.textContent.replace(/[^0-9]/g, ''));
 
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Berhasil!',
-                            text: 'Item berhasil dihapus dari keranjang',
-                            confirmButtonColor: '#ffc107',
-                            confirmButtonText: 'OK',
-                        });
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Oops...',
-                            text: data.message || 'Terjadi kesalahan.',
-                            confirmButtonColor: '#ffc107',
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+    fetch(`/cart/${cartId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+        },
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Hapus item dari DOM
+            cartItem.remove();
+
+            // Update badge jumlah item
+            const badge = document.querySelector('.badge');
+            const count = parseInt(badge.textContent);
+            badge.textContent = `${count - 1} Item`;
+
+            // Update total harga
+            const totalElement = document.querySelector('.total-section h4.text-warning');
+            const currentTotal = parseInt(totalElement.textContent.replace(/[^0-9]/g, ''));
+            const newTotal = currentTotal - itemTotal;
+            totalElement.textContent = `Rp ${newTotal.toLocaleString('id-ID')}`;
+
+            // Jika tidak ada item lagi, tampilkan view kosong
+            if ((count - 1) === 0) {
+                document.querySelector('.cart-container').innerHTML = `
+                    <div class="empty-cart text-center">
+                        <img src="/storage/nasi_goreng.jpeg" class="img-fluid rounded" alt="Empty Cart" />
+                        <h4 class="mt-4">Keranjang Anda kosong!</h4>
+                        <p class="text-muted mb-4">Yuk pesan makanan favoritmu sekarang!</p>
+                        <a href="/" class="btn btn-warning btn-lg">Pesan Sekarang</a>
+                    </div>
+                `;
+            }
+
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil',
+                text: data.message,
+                confirmButtonColor: '#ffc107',
+            });
+
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal',
+                text: data.message,
+                confirmButtonColor: '#dc3545',
+            });
         }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
 
         function updateCartSummary() {
             const cartItems = document.querySelectorAll('.cart-item');

@@ -224,7 +224,16 @@ class HomepageController extends Controller
         $cart = History::find($id);
         if ($cart && $cart->user_id == Auth::user()->id) {
             $cart->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Item berhasil dihapus dari keranjang'
+            ]);
         }
-        return redirect()->route('cart');
+
+        return response()->json([
+            'success' => false,
+            'message' => 'Gagal menghapus item atau item tidak ditemukan'
+        ]);
     }
 }
