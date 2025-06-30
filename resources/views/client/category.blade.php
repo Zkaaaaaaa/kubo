@@ -5,6 +5,13 @@
 @include('client.components.client-styles')
 
 @section('content')
+<style>
+    .product-card img {
+            object-fit: cover;
+            height: 180px;
+            width: 100%;
+        }
+</style>
     <div class="container">
         <div class="row">
             <h4 class="card-title mb-4">Produk dalam Kategori "{{ $category->name }}"</h4>
