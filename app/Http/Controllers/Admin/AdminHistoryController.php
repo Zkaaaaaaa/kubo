@@ -33,7 +33,7 @@ class AdminHistoryController extends Controller
                 'quantity' => $group->sum('quantity'),
                 'status' => $group->first()->status,
                 'table' => $group->first()->table,
-                'user_id' => $group->first()->user->name,
+                'user_id' => $group->first()->user->name ?? 'Unknown',
             ];
         });
 

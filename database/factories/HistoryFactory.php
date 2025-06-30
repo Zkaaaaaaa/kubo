@@ -25,7 +25,7 @@ class HistoryFactory extends Factory
             'total' => fake()->randomFloat(2, 10, 1000),
             'table' => fake()->numberBetween(1, 100),
             'status' => fake()->randomElement(['cart', 'process', 'done']),
-            'user_id' => fake()->numberBetween(1, 10),
+            'user_id' => fake()->numberBetween(1, 3),
             'token' => fake()->text(10),
         ];
     }
